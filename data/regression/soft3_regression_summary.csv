@@ -1,0 +1,4 @@
+case_id,result,mismatch_count,first_mismatch,log
+soft_awgn_0db,PASS,0,,C:\Users\AIALRA-PORTABLE\Desktop\Vertebi\viterbi_startup_pack\src\data\regression\xsim_logs\xsim_soft3_soft_awgn_0db.log
+soft_awgn_1db,PASS,0,,C:\Users\AIALRA-PORTABLE\Desktop\Vertebi\viterbi_startup_pack\src\data\regression\xsim_logs\xsim_soft3_soft_awgn_1db.log
+soft_awgn_2db,PASS,0,,C:\Users\AIALRA-PORTABLE\Desktop\Vertebi\viterbi_startup_pack\src\data\regression\xsim_logs\xsim_soft3_soft_awgn_2db.log

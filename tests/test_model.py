@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from model.channel import flip_positions, hard_to_soft3, no_noise
+from model.channel import awgn_soft3, flip_positions, hard_to_soft3, no_noise
 from model.conv_encoder import encode_bits, terminated_payload
 from model.trellis import load_code_spec
 from model.viterbi_golden import decode_hard, decode_soft3
@@ -71,4 +71,23 @@ def test_k7_single_encoded_bit_error_is_corrected_for_small_case():
     encoded = encode_bits(payload, spec)
     received = flip_positions(encoded, [7])
     decoded = decode_hard(received, spec, decoded_length=len(payload)).decoded_bits
+    assert_zero_mismatch(payload, decoded)
+
+
+def test_k7_soft3_finite_width_subtract_min_zero_mismatch():
+    spec = load_code_spec(SPEC_PATH, "code")
+    payload = [
+        1, 1, 0, 0, 1, 0, 1, 1,
+        0, 1, 0, 0, 1, 1, 1, 0,
+        1, 0, 1, 0, 1, 1, 0, 0,
+    ]
+    encoded = encode_bits(payload, spec)
+    soft = awgn_soft3(encoded, snr_db=2.0, seed=2402)
+    decoded = decode_soft3(
+        soft,
+        spec,
+        decoded_length=len(payload),
+        path_metric_width=12,
+        normalization="subtract_min",
+    ).decoded_bits
     assert_zero_mismatch(payload, decoded)

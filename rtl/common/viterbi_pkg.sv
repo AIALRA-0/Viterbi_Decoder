@@ -8,7 +8,12 @@ package viterbi_pkg;
   localparam int FRAME_BITS = 102;
   localparam int CODE_BITS = 204;
   localparam int METRIC_WIDTH = 10;
+  localparam int SOFT_WIDTH_BITS = 3;
+  localparam int SOFT_SYMBOL_MAX = (1 << SOFT_WIDTH_BITS) - 1;
+  localparam logic [SOFT_WIDTH_BITS-1:0] SOFT_SYMBOL_MAX_VALUE = {SOFT_WIDTH_BITS{1'b1}};
+  localparam int HERO_METRIC_WIDTH = 12;
   localparam logic [METRIC_WIDTH-1:0] INF_METRIC = {METRIC_WIDTH{1'b1}};
+  localparam logic [HERO_METRIC_WIDTH-1:0] HERO_INF_METRIC = {HERO_METRIC_WIDTH{1'b1}};
 
   function automatic logic [K-1:0] polynomial(input int idx);
     begin
@@ -56,6 +61,28 @@ package viterbi_pkg;
         metric = metric + (rx_symbol[i] ^ expected_symbol[i]);
       end
       branch_metric_hard = metric;
+    end
+  endfunction
+
+  function automatic logic [HERO_METRIC_WIDTH-1:0] branch_metric_soft3(
+    input logic [OUTPUT_BITS*SOFT_WIDTH_BITS-1:0] rx_symbol,
+    input logic [OUTPUT_BITS-1:0] expected_symbol
+  );
+    logic [HERO_METRIC_WIDTH-1:0] metric;
+    logic [SOFT_WIDTH_BITS-1:0] rx_value;
+    logic [SOFT_WIDTH_BITS-1:0] ideal_value;
+    begin
+      metric = '0;
+      for (int i = 0; i < OUTPUT_BITS; i++) begin
+        rx_value = rx_symbol[i*SOFT_WIDTH_BITS +: SOFT_WIDTH_BITS];
+        ideal_value = expected_symbol[i] ? SOFT_SYMBOL_MAX_VALUE : '0;
+        if (rx_value >= ideal_value) begin
+          metric = metric + (rx_value - ideal_value);
+        end else begin
+          metric = metric + (ideal_value - rx_value);
+        end
+      end
+      branch_metric_soft3 = metric;
     end
   endfunction
 endpackage

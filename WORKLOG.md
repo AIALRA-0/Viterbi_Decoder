@@ -143,3 +143,30 @@ Pending at record time.
 
 ### Result
 PASS: M3 gate satisfied.
+
+## M4 2026-05-02T06:47:01-04:00
+
+### Plan
+Add the 3-bit soft-decision hero path with finite-width path metrics and subtract-min normalization. Update Python golden behavior and verify soft AWGN cases against RTL output.
+
+### Edit
+Extended `model/viterbi_golden.py` with `path_metric_width` and `normalization` options. Added a finite-width subtract-min pytest. Extended `scripts/gen_rtl_pkg.py` to emit soft-width and hero metric constants plus `branch_metric_soft3`. Added `bmu_soft3.sv`, `path_metric_normalizer.sv`, `viterbi_decoder_core_soft3.sv`, `tb_viterbi_soft3.sv`, and `scripts/run_soft3_regression.py`.
+
+### Run
+`python -m pytest tests -q`
+
+`python scripts\run_soft3_regression.py --env config\local.env --cases soft_awgn_0db soft_awgn_1db soft_awgn_2db`
+
+`python scripts\run_rtl_regression.py --env config\local.env --cases no_noise all_zero impulse_one single_bit_error`
+
+### Verify
+PASS: pytest passed 6 tests. soft_awgn_0db, soft_awgn_1db, and soft_awgn_2db all passed soft3 xsim with mismatch count 0. Prior hard RTL regression still passed all 4 required M3 cases with mismatch count 0.
+
+### Record
+Soft3 RTL summary written to `data/regression/soft3_regression_summary.csv`.
+
+### Commit
+Pending at record time.
+
+### Result
+PASS: M4 gate satisfied.

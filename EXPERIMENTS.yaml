@@ -73,3 +73,20 @@
   data: "data/regression/rtl_regression_summary.csv"
   commit: pending
   notes: "Intermediate tool/script failures were fixed before gate pass: settings quoting, reserved keyword, package timescale, xsim plusarg parsing."
+
+- id: m4_soft3_xsim_20260502_064701
+  phase: M4
+  mode: rtl_soft3
+  traceback_depth: full_sequence_frame
+  path_metric_width: 12
+  normalization: subtract_min
+  vector_set: "soft_awgn_0db,soft_awgn_1db,soft_awgn_2db"
+  command: "python scripts\\run_soft3_regression.py --env config\\local.env --cases soft_awgn_0db soft_awgn_1db soft_awgn_2db"
+  result: PASS
+  tests_passed: 3
+  tests_failed: 0
+  mismatch_count: 0
+  first_mismatch: null
+  data: "data/regression/soft3_regression_summary.csv"
+  commit: pending
+  notes: "Python pytest also passed 6 tests; hard RTL regression still passed 4 cases."

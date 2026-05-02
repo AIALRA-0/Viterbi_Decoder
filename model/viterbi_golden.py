@@ -27,6 +27,8 @@ def decode(
     spec: CodeSpec,
     decision_mode: str = "hard",
     decoded_length: int | None = None,
+    path_metric_width: int | None = None,
+    normalization: str = "none",
 ) -> DecodeResult:
     symbols = pair_symbols(received, spec.output_count)
     trellis = build_trellis(spec)
@@ -53,6 +55,22 @@ def decode(
                 if candidate < old:
                     next_metrics[step.next_state] = candidate
                     next_survivors[step.next_state] = (state, input_bit)
+        if path_metric_width is not None:
+            max_metric = (1 << path_metric_width) - 1
+            next_metrics = [
+                min(value, max_metric) if value != inf else value
+                for value in next_metrics
+            ]
+        if normalization == "subtract_min":
+            finite = [value for value in next_metrics if value != inf]
+            if finite:
+                minimum = min(finite)
+                next_metrics = [
+                    value - minimum if value != inf else value
+                    for value in next_metrics
+                ]
+        elif normalization != "none":
+            raise ValueError(f"Unsupported normalization: {normalization}")
         metrics = next_metrics
         survivors.append(next_survivors)
 
@@ -80,10 +98,35 @@ def decode(
     )
 
 
-def decode_hard(received: Iterable[int], spec: CodeSpec, decoded_length: int | None = None) -> DecodeResult:
-    return decode(received, spec, decision_mode="hard", decoded_length=decoded_length)
+def decode_hard(
+    received: Iterable[int],
+    spec: CodeSpec,
+    decoded_length: int | None = None,
+    path_metric_width: int | None = None,
+    normalization: str = "none",
+) -> DecodeResult:
+    return decode(
+        received,
+        spec,
+        decision_mode="hard",
+        decoded_length=decoded_length,
+        path_metric_width=path_metric_width,
+        normalization=normalization,
+    )
 
 
-def decode_soft3(received: Iterable[int], spec: CodeSpec, decoded_length: int | None = None) -> DecodeResult:
-    return decode(received, spec, decision_mode="soft3", decoded_length=decoded_length)
-
+def decode_soft3(
+    received: Iterable[int],
+    spec: CodeSpec,
+    decoded_length: int | None = None,
+    path_metric_width: int | None = None,
+    normalization: str = "none",
+) -> DecodeResult:
+    return decode(
+        received,
+        spec,
+        decision_mode="soft3",
+        decoded_length=decoded_length,
+        path_metric_width=path_metric_width,
+        normalization=normalization,
+    )
