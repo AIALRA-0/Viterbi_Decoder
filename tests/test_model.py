@@ -89,5 +89,6 @@ def test_k7_soft3_finite_width_subtract_min_zero_mismatch():
         decoded_length=len(payload),
         path_metric_width=12,
         normalization="subtract_min",
+        traceback_depth=16,
     ).decoded_bits
     assert_zero_mismatch(payload, decoded)

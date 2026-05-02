@@ -29,12 +29,14 @@ def decode(
     decoded_length: int | None = None,
     path_metric_width: int | None = None,
     normalization: str = "none",
+    traceback_depth: int | None = None,
 ) -> DecodeResult:
     symbols = pair_symbols(received, spec.output_count)
     trellis = build_trellis(spec)
     metrics = [inf] * spec.state_count
     metrics[0] = 0
     survivors: list[list[tuple[int, int] | None]] = []
+    metrics_history: list[list[float]] = []
 
     if decision_mode == "hard":
         branch_metric = _hamming_metric
@@ -73,22 +75,43 @@ def decode(
             raise ValueError(f"Unsupported normalization: {normalization}")
         metrics = next_metrics
         survivors.append(next_survivors)
+        metrics_history.append(metrics.copy())
 
     if spec.tail_termination == "zero_tail":
         final_state = 0
     else:
         final_state = min(range(spec.state_count), key=lambda state: metrics[state])
 
-    decoded_reversed: list[int] = []
-    state = final_state
-    for step_survivors in reversed(survivors):
-        item = step_survivors[state]
-        if item is None:
-            raise ValueError(f"No survivor path for state {state}")
-        prev_state, input_bit = item
-        decoded_reversed.append(input_bit)
-        state = prev_state
-    decoded_bits = list(reversed(decoded_reversed))
+    if traceback_depth is None or traceback_depth >= len(symbols):
+        decoded_reversed: list[int] = []
+        state = final_state
+        for step_survivors in reversed(survivors):
+            item = step_survivors[state]
+            if item is None:
+                raise ValueError(f"No survivor path for state {state}")
+            prev_state, input_bit = item
+            decoded_reversed.append(input_bit)
+            state = prev_state
+        decoded_bits = list(reversed(decoded_reversed))
+    else:
+        decoded_bits = []
+        last_symbol = len(symbols) - 1
+        for decision_idx in range(len(symbols)):
+            anchor_idx = min(last_symbol, decision_idx + traceback_depth - 1)
+            if spec.tail_termination == "zero_tail" and anchor_idx == last_symbol:
+                state = final_state
+            else:
+                state = min(range(spec.state_count), key=lambda item: metrics_history[anchor_idx][item])
+            decided_bit = 0
+            for step_idx in range(anchor_idx, decision_idx - 1, -1):
+                item = survivors[step_idx][state]
+                if item is None:
+                    raise ValueError(f"No survivor path for state {state}")
+                prev_state, input_bit = item
+                if step_idx == decision_idx:
+                    decided_bit = input_bit
+                state = prev_state
+            decoded_bits.append(decided_bit)
     if decoded_length is not None:
         decoded_bits = decoded_bits[:decoded_length]
     return DecodeResult(
@@ -104,6 +127,7 @@ def decode_hard(
     decoded_length: int | None = None,
     path_metric_width: int | None = None,
     normalization: str = "none",
+    traceback_depth: int | None = None,
 ) -> DecodeResult:
     return decode(
         received,
@@ -112,6 +136,7 @@ def decode_hard(
         decoded_length=decoded_length,
         path_metric_width=path_metric_width,
         normalization=normalization,
+        traceback_depth=traceback_depth,
     )
 
 
@@ -121,6 +146,7 @@ def decode_soft3(
     decoded_length: int | None = None,
     path_metric_width: int | None = None,
     normalization: str = "none",
+    traceback_depth: int | None = None,
 ) -> DecodeResult:
     return decode(
         received,
@@ -129,4 +155,5 @@ def decode_soft3(
         decoded_length=decoded_length,
         path_metric_width=path_metric_width,
         normalization=normalization,
+        traceback_depth=traceback_depth,
     )

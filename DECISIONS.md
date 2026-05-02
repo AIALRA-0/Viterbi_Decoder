@@ -135,3 +135,20 @@ Subtract-min preserves relative path costs while keeping values small enough for
 
 ## Consequence
 Python golden and soft3 RTL both apply the same normalization policy for M4 hero verification.
+
+# Decision D-009: Model traceback depth as finite delayed decisions in M5
+
+## Context
+M5 must sweep traceback depth. Treating traceback depth as a label without changing decoder behavior would hide the real latency/correction tradeoff.
+
+## Options
+Ignore traceback depth, rerun only full-frame traceback, or add finite delayed-decision traceback to the Python golden model.
+
+## Decision
+Add finite delayed-decision traceback to `model/viterbi_golden.py` and use it for M5 sweep rows.
+
+## Reason
+It produces real mismatch data for short traceback depths and keeps the sweep honest.
+
+## Consequence
+M5 data shows the actual effect of traceback depth; for the current vectors, `soft_awgn_0db` at depth 16 has mismatches while deeper settings recover the payload.

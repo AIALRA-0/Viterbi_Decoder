@@ -170,3 +170,28 @@ Pending at record time.
 
 ### Result
 PASS: M4 gate satisfied.
+
+## M5 2026-05-02T06:50:45-04:00
+
+### Plan
+Run the required parameter sweep over traceback depth 16/32/40/64, path metric width 8/10/12/16, and normalization none/subtract_min. Use real Python golden decoding with finite traceback behavior and generated M2 vectors.
+
+### Edit
+Extended `model/viterbi_golden.py` with finite traceback-depth decision behavior. Added `scripts/run_sweeps.py` to produce sweep CSV data and plots. Updated the soft3 finite-width pytest to exercise traceback depth 16.
+
+### Run
+`python -m pytest tests -q`
+
+`python scripts\run_sweeps.py --spec spec\viterbi_spec.json --vectors vectors --out data\analysis\sweep_results.csv`
+
+### Verify
+PASS: pytest passed 6 tests. Sweep generated 288 rows and two plots: `docs/assets/plots/m5_soft3_mismatch_vs_traceback.png` and `docs/assets/plots/m5_soft3_subtract_min_heatmap.png`. Total mismatch count was 64. The nonzero mismatches all came from `soft_awgn_0db` at traceback depth 16; each affected metric-width/normalization combination had mismatch count 8 and first mismatch 3.
+
+### Record
+Sweep CSV written to `data/analysis/sweep_results.csv`; plots written to `docs/assets/plots/`.
+
+### Commit
+Pending at record time.
+
+### Result
+PASS: M5 gate satisfied.

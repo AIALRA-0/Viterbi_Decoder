@@ -90,3 +90,19 @@
   data: "data/regression/soft3_regression_summary.csv"
   commit: pending
   notes: "Python pytest also passed 6 tests; hard RTL regression still passed 4 cases."
+
+- id: m5_sweep_20260502_065045
+  phase: M5
+  mode: python_sweep
+  traceback_depth: "16,32,40,64"
+  path_metric_width: "8,10,12,16"
+  normalization: "none,subtract_min"
+  vector_set: "all M2 vectors"
+  command: "python scripts\\run_sweeps.py --spec spec\\viterbi_spec.json --vectors vectors --out data\\analysis\\sweep_results.csv"
+  result: PASS
+  rows: 288
+  mismatch_count: 64
+  first_mismatch: 3
+  data: "data/analysis/sweep_results.csv; docs/assets/plots/m5_soft3_mismatch_vs_traceback.png; docs/assets/plots/m5_soft3_subtract_min_heatmap.png"
+  commit: pending
+  notes: "All mismatches are from soft_awgn_0db at traceback depth 16."
