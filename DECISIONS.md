@@ -186,3 +186,20 @@ The FIR reference shell already used this pattern successfully on the same ZU4EV
 
 ## Consequence
 M7 board validation passed with 204 input samples and 96 output samples for all required cases. Larger future board vectors may need DDR access debug or a bigger staging strategy.
+
+# Decision D-012: Label final report BER data as finite-vector observed mismatch rate
+
+## Context
+The final report prompt requires `data/analysis/ber_summary.csv`, but this project only ran the finite M2 vector set and the M5 parameter sweep. It did not run a large random-channel statistical BER campaign.
+
+## Options
+Invent a smooth BER curve, omit the required file, or generate the file from actual finite-vector mismatch counts and label the limitation clearly.
+
+## Decision
+Generate `data/analysis/ber_summary.csv` from real vector-level mismatch counts and describe it in the report as finite-vector observed mismatch rate, not as a statistically converged BER campaign.
+
+## Reason
+This satisfies the required data pipeline without fabricating experiment results.
+
+## Consequence
+The final report can compare hard and soft cases honestly, but it explicitly says the result is a functional verification summary rather than a channel-performance publication curve.

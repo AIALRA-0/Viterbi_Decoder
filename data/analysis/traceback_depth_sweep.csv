@@ -1,0 +1,5 @@
+traceback_depth,path_metric_width,normalization,rows,payload_bits_total,mismatch_count_total,observed_mismatch_rate,source_csv
+16,12,subtract_min,9,864,8,0.009259,data/analysis/sweep_results.csv
+32,12,subtract_min,9,864,0,0.000000,data/analysis/sweep_results.csv
+40,12,subtract_min,9,864,0,0.000000,data/analysis/sweep_results.csv
+64,12,subtract_min,9,864,0,0.000000,data/analysis/sweep_results.csv

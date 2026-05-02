@@ -254,3 +254,32 @@ Pending at record time.
 
 ### Result
 PASS: M7 board-validation gate satisfied with real UART evidence and no non-volatile memory programming.
+
+## M8 2026-05-02T08:48:50-04:00
+
+### Plan
+Generate the final Chinese report from the real M0-M7 evidence, include required CSV-backed figures and tables, generate `Report.md` and `Report.pdf`, run the final checklist, and commit only after verification passes.
+
+### Edit
+Added `scripts/build_final_report.py`. The script reads committed model, sweep, Vivado, and board data; derives the required report CSVs without inventing data; generates seven plot images; writes `Report.md`; builds `Report.pdf`; writes `reports/final_review.md`; and renders PDF preview pages for visual inspection.
+
+### Run
+`python scripts\build_final_report.py`
+
+`python -m pytest tests -q`
+
+`python -c "from pypdf import PdfReader; ..."`
+
+`rg` placeholder and forbidden-keyword scan over `Report.md` and `reports/final_review.md`
+
+### Verify
+PASS: report build completed. `Report.pdf` has 13 pages and 15706 extractable text characters. Placeholder and forbidden-keyword scan returned no matches. Pytest passed 6 tests. Visual preview of PDF pages 1-3 showed Chinese text, tables, and plots rendered correctly.
+
+### Record
+Final report artifacts written to `Report.md`, `Report.pdf`, `reports/final_review.md`, `reports/pdf_preview/`, `docs/assets/plots/`, and `data/analysis/`.
+
+### Commit
+Pending at record time.
+
+### Result
+PASS: M8 final-report gate satisfied with a reproducible report generator, real source data, explicit limitations, and AI tool statement.

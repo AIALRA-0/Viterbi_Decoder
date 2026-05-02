@@ -154,3 +154,21 @@
   data: "data/board_runs/board_summary.csv; data/board_runs/m7_board_20260502_083547/uart.log; data/board_runs/m7_board_20260502_083547/uart_capture.json"
   commit: pending
   notes: "Earlier failed board attempts are retained. Final pass required including the OCM segment in the DMA address spaces."
+
+- id: m8_final_report_20260502_084850
+  phase: M8
+  mode: final_report_generation
+  traceback_depth: "source data from M5/M7"
+  path_metric_width: "source data from M5/M6/M7"
+  normalization: "source data from M5/M6/M7"
+  vector_set: "all committed report source data"
+  command: "python scripts\\build_final_report.py"
+  result: PASS
+  pdf_pages: 13
+  pdf_text_chars: 15706
+  tests_passed: 6
+  tests_failed: 0
+  placeholder_scan: PASS
+  data: "Report.md; Report.pdf; reports/final_review.md; data/analysis/ber_summary.csv; data/analysis/traceback_depth_sweep.csv; data/analysis/path_metric_width_sweep.csv; docs/assets/plots/fig04_state_explosion.png; docs/assets/plots/fig05_hard_vs_soft_metric.png; docs/assets/plots/fig09_normalization_effect.png; docs/assets/plots/fig14_depth_tradeoff.png; docs/assets/plots/fig15_width_resource_tradeoff.png; docs/assets/plots/fig16_fmax_resource_plot.png; docs/assets/plots/fig17_board_run_summary.png"
+  commit: pending
+  notes: "BER summary is explicitly labeled as finite-vector observed mismatch rate; no fabricated channel curve."
