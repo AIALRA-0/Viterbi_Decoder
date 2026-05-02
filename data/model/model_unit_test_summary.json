@@ -1,0 +1,28 @@
+{
+  "phase": "M1",
+  "exitstatus": 0,
+  "passed": 5,
+  "failed": 0,
+  "results": [
+    {
+      "test": "tests/test_model.py::test_k3_smoke_no_noise_zero_mismatch",
+      "outcome": "passed"
+    },
+    {
+      "test": "tests/test_model.py::test_k3_smoke_soft3_no_noise_zero_mismatch",
+      "outcome": "passed"
+    },
+    {
+      "test": "tests/test_model.py::test_k7_formal_no_noise_zero_mismatch",
+      "outcome": "passed"
+    },
+    {
+      "test": "tests/test_model.py::test_k7_formal_tail_termination_returns_to_zero_state",
+      "outcome": "passed"
+    },
+    {
+      "test": "tests/test_model.py::test_k7_single_encoded_bit_error_is_corrected_for_small_case",
+      "outcome": "passed"
+    }
+  ]
+}

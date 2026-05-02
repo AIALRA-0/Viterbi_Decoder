@@ -12,6 +12,17 @@
     "tail_termination": "zero_tail",
     "state_count": 64
   },
+  "smoke_test": {
+    "type": "convolutional",
+    "rate": "1/2",
+    "constraint_length": 3,
+    "polynomials_octal": [
+      7,
+      5
+    ],
+    "tail_termination": "zero_tail",
+    "state_count": 4
+  },
   "decoder": {
     "decision_modes": [
       "hard",

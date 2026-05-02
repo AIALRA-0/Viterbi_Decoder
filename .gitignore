@@ -23,6 +23,11 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Python generated files
+__pycache__/
+*.pyc
+.pytest_cache/
+
 # Private board documents must not be committed
 board_docs/
 private_docs/

@@ -54,3 +54,26 @@ Pending at record time.
 
 ### Result
 PASS: M0 gate satisfied.
+
+## M1 2026-05-02T06:27:04-04:00
+
+### Plan
+Implement a spec-driven Python convolutional encoder, trellis generator, hard/soft golden Viterbi decoder, channel model, and pytest coverage. Use K=3 only as the spec-defined smoke test and K=7 as the formal design target.
+
+### Edit
+Added `model/trellis.py`, `model/conv_encoder.py`, `model/channel.py`, `model/viterbi_golden.py`, and `model/__init__.py`. Added `tests/conftest.py` to emit `data/model/model_unit_test_summary.json`. Added `tests/test_model.py` with K=3 smoke, K=7 no-noise, zero-tail, and single encoded-bit error checks. Added a `smoke_test` section to `spec/viterbi_spec.json` so all code parameters still come from spec.
+
+### Run
+`python -m pytest tests -q`
+
+### Verify
+PASS: 5 pytest cases passed. K=3 smoke no-noise mismatch count was 0. K=7 formal no-noise mismatch count was 0. No first mismatch was observed.
+
+### Record
+Model unit test summary written to `data/model/model_unit_test_summary.json`.
+
+### Commit
+Pending at record time.
+
+### Result
+PASS: M1 gate satisfied.

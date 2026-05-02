@@ -23,3 +23,19 @@
   mismatch_count: null
   commit: pending
   notes: "pandas ABI warning and Vivado/xsct PATH warning observed; settings files exist and M0 passed."
+
+- id: m1_model_pytest_20260502_062704
+  phase: M1
+  mode: python_golden
+  traceback_depth: full_sequence
+  path_metric_width: unbounded
+  normalization: none
+  vector_set: k3_smoke_and_k7_formal
+  command: "python -m pytest tests -q"
+  result: PASS
+  tests_passed: 5
+  tests_failed: 0
+  mismatch_count: 0
+  first_mismatch: null
+  data: "data/model/model_unit_test_summary.json"
+  commit: pending

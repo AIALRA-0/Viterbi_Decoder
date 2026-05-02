@@ -50,3 +50,20 @@ M0 only verifies paths and tool setup. Real board execution belongs to M7 and fl
 
 ## Consequence
 M7 must explicitly record any board run command and must still avoid flash writes.
+
+# Decision D-004: Use full-sequence Python Viterbi as the M1 golden model
+
+## Context
+M1 needs a bit-true reference before RTL work starts. The traceback-depth approximation belongs to later hardware architecture exploration.
+
+## Options
+Use a full-sequence dynamic-programming decoder, immediately model finite traceback depth, or rely on handwritten expected vectors.
+
+## Decision
+Use a full-sequence dynamic-programming Viterbi decoder as the M1 golden model.
+
+## Reason
+It is deterministic, simple to verify for no-noise and small error cases, and provides a stable software reference before introducing hardware traceback constraints.
+
+## Consequence
+M5 must add explicit traceback-depth behavior and compare any finite-depth loss against this full-sequence reference.
