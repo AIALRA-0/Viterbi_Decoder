@@ -1,0 +1,5 @@
+case_id,result,mismatch_count,first_mismatch,log
+no_noise,PASS,0,,C:\Users\AIALRA-PORTABLE\Desktop\Vertebi\viterbi_startup_pack\src\data\regression\xsim_logs\xsim_no_noise.log
+all_zero,PASS,0,,C:\Users\AIALRA-PORTABLE\Desktop\Vertebi\viterbi_startup_pack\src\data\regression\xsim_logs\xsim_all_zero.log
+impulse_one,PASS,0,,C:\Users\AIALRA-PORTABLE\Desktop\Vertebi\viterbi_startup_pack\src\data\regression\xsim_logs\xsim_impulse_one.log
+single_bit_error,PASS,0,,C:\Users\AIALRA-PORTABLE\Desktop\Vertebi\viterbi_startup_pack\src\data\regression\xsim_logs\xsim_single_bit_error.log

@@ -4,9 +4,12 @@ config/local.env
 
 # Vivado/Vitis generated cache
 .Xil/
+xsim.dir/
 *.jou
 *.log
+*.pb
 *.str
+*.wdb
 vivado/build/**/project_*/
 vitis/**/Debug/
 vitis/**/Release/
@@ -27,6 +30,9 @@ Thumbs.db
 __pycache__/
 *.pyc
 .pytest_cache/
+
+# Simulation runtime selection
+tb/current_case.txt
 
 # Private board documents must not be committed
 board_docs/

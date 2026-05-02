@@ -56,3 +56,20 @@
   data: "vectors/summary.csv; data/model/vector_summary.csv"
   commit: pending
   notes: "Initial run failed because model package import path was missing; fixed by adding project root to sys.path."
+
+- id: m3_rtl_hard_xsim_20260502_064131
+  phase: M3
+  mode: rtl_hard
+  traceback_depth: full_sequence_frame
+  path_metric_width: 10
+  normalization: none
+  vector_set: "no_noise,all_zero,impulse_one,single_bit_error"
+  command: "python scripts\\run_rtl_regression.py --env config\\local.env --cases no_noise all_zero impulse_one single_bit_error"
+  result: PASS
+  tests_passed: 4
+  tests_failed: 0
+  mismatch_count: 0
+  first_mismatch: null
+  data: "data/regression/rtl_regression_summary.csv"
+  commit: pending
+  notes: "Intermediate tool/script failures were fixed before gate pass: settings quoting, reserved keyword, package timescale, xsim plusarg parsing."

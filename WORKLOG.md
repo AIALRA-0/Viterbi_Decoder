@@ -114,3 +114,32 @@ Pending at record time.
 
 ### Result
 PASS: M2 gate satisfied after fixing the script import path.
+
+## M3 2026-05-02T06:41:31-04:00
+
+### Plan
+Implement the hard-decision RTL baseline with a spec-generated package and verify it against M2 vectors using xsim. Required M3 cases: no_noise, all_zero, impulse_one, and single_bit_error.
+
+### Edit
+Added `scripts/gen_rtl_pkg.py` to generate `rtl/common/viterbi_pkg.sv` from `spec/viterbi_spec.json`. Added hard-decision RTL modules under `rtl/viterbi_core`: `bmu_hard.sv`, `acs_unit.sv`, `acs_array.sv`, `path_metric_bank.sv`, `survivor_ram.sv`, `traceback_engine.sv`, and `viterbi_decoder_core.sv`. Added `tb/tb_viterbi_core.sv` and `scripts/run_rtl_regression.py`. Updated `.gitignore` for simulator caches and generated runtime case selection.
+
+### Run
+Initial `python scripts\run_rtl_regression.py --env config\local.env --cases no_noise all_zero impulse_one single_bit_error` attempts exposed and fixed four execution issues: Windows Vivado settings quoting, SystemVerilog `bit` keyword used as a loop variable, missing package timescale, and xsim plusarg parsing. The final run was:
+
+`python scripts\run_rtl_regression.py --env config\local.env --cases no_noise all_zero impulse_one single_bit_error`
+
+Regression:
+
+`python -m pytest tests -q`
+
+### Verify
+PASS: xsim compiled and elaborated the RTL. no_noise, all_zero, impulse_one, and single_bit_error all passed with mismatch count 0 and no first mismatch. Python model pytest still passed with 5 tests.
+
+### Record
+RTL summary written to `data/regression/rtl_regression_summary.csv`.
+
+### Commit
+Pending at record time.
+
+### Result
+PASS: M3 gate satisfied.
