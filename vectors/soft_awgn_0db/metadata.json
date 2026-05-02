@@ -1,0 +1,34 @@
+{
+  "case_id": "soft_awgn_0db",
+  "run_id": "m2_soft_awgn_0db_1007",
+  "source_spec": "spec\\viterbi_spec.json",
+  "generator_commit": "e636529",
+  "hex_format": "one_value_per_line",
+  "payload_kind": "random",
+  "payload_length": 96,
+  "encoded_bit_count": 204,
+  "rx_hard_count": 204,
+  "rx_soft3_count": 204,
+  "golden_decoded_count": 96,
+  "seed": 1007,
+  "channel": "soft_awgn",
+  "decision_mode": "soft3",
+  "mismatch_count": 0,
+  "first_mismatch": null,
+  "case_config": {
+    "id": "soft_awgn_0db",
+    "payload": "random",
+    "payload_length": 96,
+    "seed": 1007,
+    "channel": "soft_awgn",
+    "snr_db": 0.0,
+    "decision_mode": "soft3"
+  },
+  "files": {
+    "input_bits.hex": "input_bits.hex",
+    "encoded_bits.hex": "encoded_bits.hex",
+    "rx_hard.hex": "rx_hard.hex",
+    "rx_soft3.hex": "rx_soft3.hex",
+    "golden_decoded.hex": "golden_decoded.hex"
+  }
+}

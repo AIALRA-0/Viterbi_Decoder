@@ -52,6 +52,93 @@
       "normalization": "subtract_min"
     }
   },
+  "vector_generation": {
+    "hex_format": "one_value_per_line",
+    "default_payload_length": 96,
+    "cases": [
+      {
+        "id": "no_noise",
+        "payload": "random",
+        "payload_length": 96,
+        "seed": 1001,
+        "channel": "no_noise",
+        "decision_mode": "hard"
+      },
+      {
+        "id": "all_zero",
+        "payload": "all_zero",
+        "payload_length": 96,
+        "seed": 1002,
+        "channel": "no_noise",
+        "decision_mode": "hard"
+      },
+      {
+        "id": "impulse_one",
+        "payload": "impulse_one",
+        "payload_length": 96,
+        "seed": 1003,
+        "channel": "no_noise",
+        "decision_mode": "hard"
+      },
+      {
+        "id": "single_bit_error",
+        "payload": "random",
+        "payload_length": 96,
+        "seed": 1004,
+        "channel": "flip_positions",
+        "flip_positions": [
+          17
+        ],
+        "decision_mode": "hard"
+      },
+      {
+        "id": "burst_error_short",
+        "payload": "random",
+        "payload_length": 96,
+        "seed": 1005,
+        "channel": "burst_error",
+        "burst_start": 32,
+        "burst_length": 4,
+        "decision_mode": "hard"
+      },
+      {
+        "id": "random_hard",
+        "payload": "random",
+        "payload_length": 96,
+        "seed": 1006,
+        "channel": "random_hard",
+        "bit_flip_probability": 0.015,
+        "decision_mode": "hard"
+      },
+      {
+        "id": "soft_awgn_0db",
+        "payload": "random",
+        "payload_length": 96,
+        "seed": 1007,
+        "channel": "soft_awgn",
+        "snr_db": 0.0,
+        "decision_mode": "soft3"
+      },
+      {
+        "id": "soft_awgn_1db",
+        "payload": "random",
+        "payload_length": 96,
+        "seed": 1008,
+        "channel": "soft_awgn",
+        "snr_db": 1.0,
+        "decision_mode": "soft3"
+      },
+      {
+        "id": "soft_awgn_2db",
+        "payload": "random",
+        "payload_length": 96,
+        "seed": 1009,
+        "channel": "soft_awgn",
+        "snr_db": 2.0,
+        "decision_mode": "soft3"
+      }
+    ]
+  },
   "board": {
     "name": "MZU04A-4EV",
     "device": "XCZU4EV-SFVC784-2I",

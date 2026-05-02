@@ -77,3 +77,40 @@ Pending at record time.
 
 ### Result
 PASS: M1 gate satisfied.
+
+## M2 2026-05-02T06:30:33-04:00
+
+### Plan
+Generate the required vector cases from `spec/viterbi_spec.json`: no_noise, all_zero, impulse_one, single_bit_error, burst_error_short, random_hard, and soft_awgn at 0/1/2 dB. Each case must include metadata, input bits, encoded bits, hard received bits, soft3 received symbols, and golden decoded bits.
+
+### Edit
+Added `vector_generation` cases to `spec/viterbi_spec.json`. Added `scripts/gen_vectors.py` with one-value-per-line hex output, metadata generation, summary CSV output, and post-generation file verification.
+
+### Run
+First run:
+
+`python scripts\gen_vectors.py --spec spec\viterbi_spec.json --out vectors`
+
+Result: FAIL because Python started from `scripts/` and could not import `model`.
+
+Fix: Added the project root to `sys.path` inside `scripts/gen_vectors.py`.
+
+Second run:
+
+`python scripts\gen_vectors.py --spec spec\viterbi_spec.json --out vectors`
+
+Regression:
+
+`python -m pytest tests -q`
+
+### Verify
+PASS: 9 vector cases generated. Each case contains `metadata.json`, `input_bits.hex`, `encoded_bits.hex`, `rx_hard.hex`, `rx_soft3.hex`, and `golden_decoded.hex`. `vectors/summary.csv` and `data/model/vector_summary.csv` were generated. Total mismatch count was 0 and first mismatch was null for every case. M1 pytest still passed with 5 tests.
+
+### Record
+M2 generation result recorded in `WORKLOG.md`, `DECISIONS.md`, and `EXPERIMENTS.yaml`.
+
+### Commit
+Pending at record time.
+
+### Result
+PASS: M2 gate satisfied after fixing the script import path.

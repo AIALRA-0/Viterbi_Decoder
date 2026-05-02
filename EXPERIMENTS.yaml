@@ -39,3 +39,20 @@
   first_mismatch: null
   data: "data/model/model_unit_test_summary.json"
   commit: pending
+
+- id: m2_vector_generation_20260502_063033
+  phase: M2
+  mode: vector_generation
+  traceback_depth: full_sequence
+  path_metric_width: unbounded
+  normalization: none
+  vector_set: "no_noise,all_zero,impulse_one,single_bit_error,burst_error_short,random_hard,soft_awgn_0db,soft_awgn_1db,soft_awgn_2db"
+  command: "python scripts\\gen_vectors.py --spec spec\\viterbi_spec.json --out vectors"
+  result: PASS
+  tests_passed: 9
+  tests_failed: 0
+  mismatch_count: 0
+  first_mismatch: null
+  data: "vectors/summary.csv; data/model/vector_summary.csv"
+  commit: pending
+  notes: "Initial run failed because model package import path was missing; fixed by adding project root to sys.path."

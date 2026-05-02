@@ -1,0 +1,10 @@
+case_id,run_id,channel,decision_mode,payload_length,encoded_bit_count,mismatch_count,first_mismatch,metadata
+no_noise,m2_no_noise_1001,no_noise,hard,96,204,0,,vectors\no_noise\metadata.json
+all_zero,m2_all_zero_1002,no_noise,hard,96,204,0,,vectors\all_zero\metadata.json
+impulse_one,m2_impulse_one_1003,no_noise,hard,96,204,0,,vectors\impulse_one\metadata.json
+single_bit_error,m2_single_bit_error_1004,flip_positions,hard,96,204,0,,vectors\single_bit_error\metadata.json
+burst_error_short,m2_burst_error_short_1005,burst_error,hard,96,204,0,,vectors\burst_error_short\metadata.json
+random_hard,m2_random_hard_1006,random_hard,hard,96,204,0,,vectors\random_hard\metadata.json
+soft_awgn_0db,m2_soft_awgn_0db_1007,soft_awgn,soft3,96,204,0,,vectors\soft_awgn_0db\metadata.json
+soft_awgn_1db,m2_soft_awgn_1db_1008,soft_awgn,soft3,96,204,0,,vectors\soft_awgn_1db\metadata.json
+soft_awgn_2db,m2_soft_awgn_2db_1009,soft_awgn,soft3,96,204,0,,vectors\soft_awgn_2db\metadata.json

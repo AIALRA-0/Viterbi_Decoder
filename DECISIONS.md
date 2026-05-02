@@ -67,3 +67,20 @@ It is deterministic, simple to verify for no-noise and small error cases, and pr
 
 ## Consequence
 M5 must add explicit traceback-depth behavior and compare any finite-depth loss against this full-sequence reference.
+
+# Decision D-005: Store vector hex files as one value per line
+
+## Context
+M2 vectors must feed Python, RTL simulation, and later board tests. A packed bitstream is compact but easy to misread across tools.
+
+## Options
+Pack bits into bytes, pack soft symbols into words, or store one value per line.
+
+## Decision
+Store every vector file as one value per line. Bit files contain `0` or `1`; soft3 files contain hexadecimal values `0` through `7`.
+
+## Reason
+The format is verbose but unambiguous, easy to inspect, and simple for testbenches to parse.
+
+## Consequence
+Later RTL and board scripts must preserve this file format or explicitly generate a derived packed format with separate metadata.

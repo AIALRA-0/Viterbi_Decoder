@@ -1,0 +1,34 @@
+{
+  "case_id": "random_hard",
+  "run_id": "m2_random_hard_1006",
+  "source_spec": "spec\\viterbi_spec.json",
+  "generator_commit": "e636529",
+  "hex_format": "one_value_per_line",
+  "payload_kind": "random",
+  "payload_length": 96,
+  "encoded_bit_count": 204,
+  "rx_hard_count": 204,
+  "rx_soft3_count": 204,
+  "golden_decoded_count": 96,
+  "seed": 1006,
+  "channel": "random_hard",
+  "decision_mode": "hard",
+  "mismatch_count": 0,
+  "first_mismatch": null,
+  "case_config": {
+    "id": "random_hard",
+    "payload": "random",
+    "payload_length": 96,
+    "seed": 1006,
+    "channel": "random_hard",
+    "bit_flip_probability": 0.015,
+    "decision_mode": "hard"
+  },
+  "files": {
+    "input_bits.hex": "input_bits.hex",
+    "encoded_bits.hex": "encoded_bits.hex",
+    "rx_hard.hex": "rx_hard.hex",
+    "rx_soft3.hex": "rx_soft3.hex",
+    "golden_decoded.hex": "golden_decoded.hex"
+  }
+}
