@@ -10,6 +10,8 @@ xsim.dir/
 *.pb
 *.str
 *.wdb
+*.dcp
+clockInfo.txt
 vivado/build/**/project_*/
 vitis/**/Debug/
 vitis/**/Release/

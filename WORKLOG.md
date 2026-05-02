@@ -195,3 +195,30 @@ Pending at record time.
 
 ### Result
 PASS: M5 gate satisfied.
+
+## M6 2026-05-02T07:05:59-04:00
+
+### Plan
+Run Vivado synthesis for the hard baseline and soft3 hero, then run Vivado implementation for the selected soft3 hero. Parse utilization, timing, and power into a summary CSV. Record timing failure honestly if it occurs.
+
+### Edit
+Added `vivado/tcl/run_synth.tcl`, `vivado/tcl/run_impl.tcl`, and `scripts/run_vivado_reports.py`. Updated `.gitignore` to keep generated DCP checkpoints out of git. Added `data/impl/timing_analysis.md`.
+
+### Run
+`python scripts\run_vivado_reports.py --env config\local.env`
+
+Parser fix after run:
+
+The first summary parsed utilization and power but left WNS/TNS blank. I inspected `timing_summary.rpt`, fixed `parse_timing`, and re-parsed existing Vivado reports without rerunning implementation.
+
+### Verify
+PASS: baseline synthesis, hero synthesis, and hero implementation all completed with Vivado return code 0. `data/impl/vivado_summary.csv` contains utilization, WNS, TNS, and power. Timing is not met for the hero: routed WNS -20.433 ns and TNS -16272.939 ns. The critical setup path is from `compute_idx_reg[4]/C` to `metrics_reg[47][10]/D`, with 30.415 ns data path delay and 116 logic levels.
+
+### Record
+Vivado summary written to `data/impl/vivado_summary.csv`; critical path analysis written to `data/impl/timing_analysis.md`.
+
+### Commit
+Pending at record time.
+
+### Result
+PASS: M6 data-collection gate satisfied. Timing failure is recorded as a design limitation, not hidden.

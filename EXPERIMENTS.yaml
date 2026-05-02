@@ -106,3 +106,27 @@
   data: "data/analysis/sweep_results.csv; docs/assets/plots/m5_soft3_mismatch_vs_traceback.png; docs/assets/plots/m5_soft3_subtract_min_heatmap.png"
   commit: pending
   notes: "All mismatches are from soft_awgn_0db at traceback depth 16."
+
+- id: m6_vivado_20260502_070559
+  phase: M6
+  mode: vivado_ooc
+  traceback_depth: full_sequence_frame
+  path_metric_width: 12
+  normalization: subtract_min
+  vector_set: null
+  command: "python scripts\\run_vivado_reports.py --env config\\local.env"
+  result: PASS
+  runs: 3
+  tests_failed: 0
+  baseline_synth_lut: 8116
+  baseline_synth_ff: 15243
+  hero_synth_lut: 10570
+  hero_synth_ff: 17118
+  hero_impl_lut: 10647
+  hero_impl_ff: 17118
+  hero_impl_wns_ns: -20.433
+  hero_impl_tns_ns: -16272.939
+  hero_impl_power_w: 0.487
+  data: "data/impl/vivado_summary.csv; data/impl/timing_analysis.md"
+  commit: pending
+  notes: "Vivado implementation completed but timing was not met at 10 ns. Critical path recorded."

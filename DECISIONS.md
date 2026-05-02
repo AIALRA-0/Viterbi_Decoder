@@ -152,3 +152,20 @@ It produces real mismatch data for short traceback depths and keeps the sweep ho
 
 ## Consequence
 M5 data shows the actual effect of traceback depth; for the current vectors, `soft_awgn_0db` at depth 16 has mismatches while deeper settings recover the payload.
+
+# Decision D-010: Treat M6 timing failure as a recorded result, not a blocker to report collection
+
+## Context
+Vivado implementation completed for the soft3 hero, but the 10 ns timing target was not met.
+
+## Options
+Hide the timing failure, keep rerunning implementation without architecture changes, or record the failure and critical path for the report.
+
+## Decision
+Record the timing failure and continue only because M6's required artifact is real synthesis/implementation data, not a guaranteed timing-clean design.
+
+## Reason
+The prompt explicitly says timing failures must not be hidden. The routed WNS/TNS and critical path are useful engineering results.
+
+## Consequence
+The final report must state that the current hero architecture is functionally verified but not timing-clean at 100 MHz, and must explain that the one-cycle 64-state soft ACS/reduction path needs pipelining.
