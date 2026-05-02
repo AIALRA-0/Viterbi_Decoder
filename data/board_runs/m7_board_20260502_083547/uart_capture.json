@@ -1,0 +1,38 @@
+{
+  "port": "COM9",
+  "baud": 115200,
+  "started_at": "2026-05-02T08:35:47",
+  "arch_id": 7,
+  "console": "COM9",
+  "cases": [
+    {
+      "name": "no_noise",
+      "length": 96,
+      "cycles": 802,
+      "mismatches": 0,
+      "status_hex": "00000001"
+    },
+    {
+      "name": "single_bit_error",
+      "length": 96,
+      "cycles": 855,
+      "mismatches": 0,
+      "status_hex": "00000001"
+    },
+    {
+      "name": "soft_awgn_2db",
+      "length": 96,
+      "cycles": 855,
+      "mismatches": 0,
+      "status_hex": "00000001"
+    }
+  ],
+  "summary": {
+    "case_count": 3,
+    "failures": 0
+  },
+  "passed": true,
+  "failure_class": null,
+  "failure_detail": null,
+  "completed_at": "2026-05-02T08:36:07"
+}

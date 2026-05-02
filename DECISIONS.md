@@ -169,3 +169,20 @@ The prompt explicitly says timing failures must not be hidden. The routed WNS/TN
 
 ## Consequence
 The final report must state that the current hero architecture is functionally verified but not timing-clean at 100 MHz, and must explain that the one-cycle 64-state soft ACS/reduction path needs pipelining.
+
+# Decision D-011: Use OCM buffers for M7 board DMA validation
+
+## Context
+The first M7 board attempt used DDR buffer addresses and the decoder saw no AXI Stream input. The second attempt used OCM static buffers and the decoder saw 109 samples, but AXI DMA reported a decode error because the Vivado address map excluded `SEG_ps_0_HPC0_LPS_OCM`.
+
+## Options
+Keep debugging DDR access, move to a custom BRAM staging buffer, or match the FIR reference board shell by explicitly including the OCM segment for both DMA address spaces.
+
+## Decision
+Use OCM static buffers in the bare-metal app and include `SEG_ps_0_HPC0_LPS_OCM` for `/axi_dma_0/Data_MM2S` and `/axi_dma_0/Data_S2MM` in the Vivado block design.
+
+## Reason
+The FIR reference shell already used this pattern successfully on the same ZU4EV board. The Viterbi test buffers are small, so OCM capacity is sufficient and the DMA path is deterministic.
+
+## Consequence
+M7 board validation passed with 204 input samples and 96 output samples for all required cases. Larger future board vectors may need DDR access debug or a bigger staging strategy.

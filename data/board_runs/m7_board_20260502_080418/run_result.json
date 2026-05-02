@@ -1,0 +1,19 @@
+{
+  "run_id": "m7_board_20260502_080418",
+  "timestamp": "2026-05-02T08:07:19",
+  "port": "COM9",
+  "baud": 115200,
+  "program_returncode": 0,
+  "capture_returncode": 1,
+  "passed": false,
+  "case_count": 0,
+  "failures": "",
+  "cases": "",
+  "total_mismatches": 0,
+  "first_mismatch": "",
+  "failure_class": "serial_timeout",
+  "failure_detail": "Did not observe completion sentinel on UART",
+  "build_info": "C:\\codex_stage\\viterbi_zu4ev\\hero_soft3\\artifacts\\build_info.json",
+  "uart_log": "C:\\Users\\AIALRA-PORTABLE\\Desktop\\Vertebi\\viterbi_startup_pack\\src\\data\\board_runs\\m7_board_20260502_080418\\uart.log",
+  "program_log": "C:\\Users\\AIALRA-PORTABLE\\Desktop\\Vertebi\\viterbi_startup_pack\\src\\data\\board_runs\\m7_board_20260502_080418\\program_driver.log"
+}

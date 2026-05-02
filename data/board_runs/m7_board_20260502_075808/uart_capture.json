@@ -1,0 +1,13 @@
+{
+  "port": "COM9",
+  "baud": 115200,
+  "started_at": "2026-05-02T07:58:08",
+  "arch_id": 7,
+  "console": "COM9",
+  "cases": [],
+  "summary": null,
+  "passed": false,
+  "failure_class": "serial_timeout",
+  "failure_detail": "Did not observe completion sentinel on UART",
+  "completed_at": "2026-05-02T08:01:08"
+}

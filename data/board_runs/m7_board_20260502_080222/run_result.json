@@ -1,0 +1,19 @@
+{
+  "run_id": "m7_board_20260502_080222",
+  "timestamp": "2026-05-02T08:03:12",
+  "port": "COM9",
+  "baud": 115200,
+  "program_returncode": 0,
+  "capture_returncode": 1,
+  "passed": false,
+  "case_count": 3,
+  "failures": 3,
+  "cases": "",
+  "total_mismatches": 0,
+  "first_mismatch": "",
+  "failure_class": "functional_failure",
+  "failure_detail": "Non-zero failures, mismatches, or error status observed",
+  "build_info": "C:\\codex_stage\\viterbi_zu4ev\\hero_soft3\\artifacts\\build_info.json",
+  "uart_log": "C:\\Users\\AIALRA-PORTABLE\\Desktop\\Vertebi\\viterbi_startup_pack\\src\\data\\board_runs\\m7_board_20260502_080222\\uart.log",
+  "program_log": "C:\\Users\\AIALRA-PORTABLE\\Desktop\\Vertebi\\viterbi_startup_pack\\src\\data\\board_runs\\m7_board_20260502_080222\\program_driver.log"
+}

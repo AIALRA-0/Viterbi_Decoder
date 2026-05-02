@@ -130,3 +130,27 @@
   data: "data/impl/vivado_summary.csv; data/impl/timing_analysis.md"
   commit: pending
   notes: "Vivado implementation completed but timing was not met at 10 ns. Critical path recorded."
+
+- id: m7_board_uart_20260502_083547
+  phase: M7
+  mode: zu4ev_board_uart
+  traceback_depth: full_sequence_frame
+  path_metric_width: 12
+  normalization: subtract_min
+  vector_set: "no_noise,single_bit_error,soft_awgn_2db"
+  command: "python scripts\\run_board_validation.py --skip-build --build-info C:\\codex_stage\\viterbi_zu4ev\\hero_soft3\\artifacts\\build_info.json --port COM9 --baud 115200 --capture-timeout 180"
+  result: PASS
+  cases: 3
+  tests_passed: 3
+  tests_failed: 0
+  mismatch_count: 0
+  first_mismatch: null
+  cycles:
+    no_noise: 802
+    single_bit_error: 855
+    soft_awgn_2db: 855
+  input_samples_seen: 204
+  output_samples_emitted: 96
+  data: "data/board_runs/board_summary.csv; data/board_runs/m7_board_20260502_083547/uart.log; data/board_runs/m7_board_20260502_083547/uart_capture.json"
+  commit: pending
+  notes: "Earlier failed board attempts are retained. Final pass required including the OCM segment in the DMA address spaces."

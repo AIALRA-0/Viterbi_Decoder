@@ -222,3 +222,35 @@ Pending at record time.
 
 ### Result
 PASS: M6 data-collection gate satisfied. Timing failure is recorded as a design limitation, not hidden.
+
+## M7 2026-05-02T08:36:08-04:00
+
+### Plan
+Build the ZU4EV PS+DMA+PL board shell for the soft3 Viterbi decoder, create a Vitis bare-metal DMA test app, program by JTAG, and capture UART PASS/FAIL logs for `no_noise`, `single_bit_error`, and `soft_awgn_2db`.
+
+### Edit
+Added `rtl/system/viterbi_axis_wrapper.sv`, `rtl/system/viterbi_control_regs.v`, and `rtl/system/viterbi_zu4ev_shell.v`. Added `vivado/tcl/zu4ev/build_viterbi_system.tcl`. Added Vitis sources under `vitis/zu4ev_baremetal/`, generated `viterbi_vectors.c/h`, and added build/program/capture orchestration scripts. Fixed the board address map by including `SEG_ps_0_HPC0_LPS_OCM` for the DMA MM2S and S2MM address spaces.
+
+### Run
+`E:\Xilinx\Vivado\2024.1\bin\vivado.bat -mode batch -source vivado\tcl\zu4ev\build_viterbi_system.tcl`
+
+`powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build_zu4ev_app.ps1 -XsaPath C:\vbd_viterbi\viterbi_zu4ev_shell.xsa -Arch hero_soft3 -StageRoot C:\codex_stage\viterbi_zu4ev`
+
+`python scripts\run_board_validation.py --skip-build --build-info C:\codex_stage\viterbi_zu4ev\hero_soft3\artifacts\build_info.json --port COM9 --baud 115200 --capture-timeout 180`
+
+`python -m pytest tests -q`
+
+### Verify
+PASS: Latest board run `m7_board_20260502_083547` captured `Completed 3 cases, failures=0`. `no_noise`, `single_bit_error`, and `soft_awgn_2db` each returned length 96, mismatch count 0, and status `0x00000001`. The board shell saw 204 input samples and emitted 96 output samples for each case. Vivado board implementation at 25 MHz completed with WNS 6.495 ns and TNS 0. Python pytest passed 6 tests.
+
+### Debug notes
+First board attempt with DDR buffers timed out before any stream input reached the core. Second attempt with OCM buffers reached 109 samples, then AXI DMA reported a decode error because the Vivado address map still excluded `SEG_ps_0_HPC0_LPS_OCM`. After matching the FIR reference shell and explicitly including the OCM segment, the third attempt passed all required cases.
+
+### Record
+Board summary written to `data/board_runs/board_summary.csv`. UART evidence written under `data/board_runs/m7_board_20260502_083547/`. Prior failed runs are retained in `data/board_runs/` as debug evidence.
+
+### Commit
+Pending at record time.
+
+### Result
+PASS: M7 board-validation gate satisfied with real UART evidence and no non-volatile memory programming.

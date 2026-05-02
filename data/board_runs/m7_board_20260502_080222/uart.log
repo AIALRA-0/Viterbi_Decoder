@@ -1,0 +1,31 @@
+FSBL is running on RPU. 
+Warning: APU-only restart is not supported if FSBL boots on RPU.
+ZU4EV Viterbi bare-metal harness
+stage=platform_init_begin
+DMA buffers tx=0x00000000FFFCFD00 rx=0x00000000FFFCFEC0
+stage=platform_init_done
+stage=dma_init_begin
+stage=dma_init_done
+Console=COM9, arch_id=7
+stage=no_noise:case_begin input_len=204 output_len=96 run_id=m2_no_noise
+[no_noise] dma_state@after_start mm2s_cr=0x00010003 mm2s_sr=0x00000000 s2mm_cr=0x00010003 s2mm_sr=0x00000000
+[no_noise] shell_state@after_start status=0x00000002 cycles=236326 seen=109 emitted=0 svalid=109 sready=236418
+[no_noise] DMA timeout
+[no_noise] dma_state@timeout mm2s_cr=0x00010002 mm2s_sr=0x00005041 s2mm_cr=0x00010002 s2mm_sr=0x00001001
+[no_noise] shell_state@timeout status=0x00000002 cycles=248677141 seen=109 emitted=0 svalid=109 sready=248677233
+[no_noise] dma_state@after_reset mm2s_cr=0x00010002 mm2s_sr=0x00000001 s2mm_cr=0x00010002 s2mm_sr=0x00000001
+stage=single_bit_error:case_begin input_len=204 output_len=96 run_id=m2_single_bit_error
+[single_bit_error] dma_state@after_start mm2s_cr=0x00010003 mm2s_sr=0x00000000 s2mm_cr=0x00010003 s2mm_sr=0x00000000
+[single_bit_error] shell_state@after_start status=0x00000002 cycles=253555 seen=109 emitted=0 svalid=109 sready=253647
+[single_bit_error] DMA timeout
+[single_bit_error] dma_state@timeout mm2s_cr=0x00010002 mm2s_sr=0x00005041 s2mm_cr=0x00010002 s2mm_sr=0x00001001
+[single_bit_error] shell_state@timeout status=0x00000002 cycles=248746046 seen=109 emitted=0 svalid=109 sready=248746138
+[single_bit_error] dma_state@after_reset mm2s_cr=0x00010002 mm2s_sr=0x00000001 s2mm_cr=0x00010002 s2mm_sr=0x00000001
+stage=soft_awgn_2db:case_begin input_len=204 output_len=96 run_id=m2_soft_awgn_2db
+[soft_awgn_2db] dma_state@after_start mm2s_cr=0x00010003 mm2s_sr=0x00000000 s2mm_cr=0x00010003 s2mm_sr=0x00000000
+[soft_awgn_2db] shell_state@after_start status=0x00000002 cycles=247092 seen=109 emitted=0 svalid=109 sready=247184
+[soft_awgn_2db] DMA timeout
+[soft_awgn_2db] dma_state@timeout mm2s_cr=0x00010002 mm2s_sr=0x00005041 s2mm_cr=0x00010002 s2mm_sr=0x00001001
+[soft_awgn_2db] shell_state@timeout status=0x00000002 cycles=248720205 seen=109 emitted=0 svalid=109 sready=248720297
+[soft_awgn_2db] dma_state@after_reset mm2s_cr=0x00010002 mm2s_sr=0x00000001 s2mm_cr=0x00010002 s2mm_sr=0x00000001
+Completed 3 cases, failures=3

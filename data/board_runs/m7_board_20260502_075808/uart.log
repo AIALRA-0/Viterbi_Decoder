@@ -1,0 +1,13 @@
+FSBL is running on RPU. 
+Warning: APU-only restart is not supported if FSBL boots on RPU.
+ZU4EV Viterbi bare-metal harness
+stage=platform_init_begin
+DMA buffers tx=0x0000000001000000 rx=0x0000000002000000
+stage=platform_init_done
+stage=dma_init_begin
+stage=dma_init_done
+Console=COM9, arch_id=7
+stage=no_noise:case_begin input_len=204 output_len=96 run_id=m2_no_noise
+[no_noise] DMA timeout
+[no_noise] dma_state@timeout mm2s_cr=0x00010003 mm2s_sr=0x00000000 s2mm_cr=0x00010003 s2mm_sr=0x00000000
+[no_noise] shell_state@timeout status=0x00000002 cycles=248199992 seen=0 emitted=0 svalid=0 sready=248200084

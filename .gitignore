@@ -12,6 +12,7 @@ xsim.dir/
 *.wdb
 *.dcp
 clockInfo.txt
+vivado/build/
 vivado/build/**/project_*/
 vitis/**/Debug/
 vitis/**/Release/
@@ -35,6 +36,9 @@ __pycache__/
 
 # Simulation runtime selection
 tb/current_case.txt
+
+# Board run evidence is part of M7.
+!data/board_runs/**/*.log
 
 # Private board documents must not be committed
 board_docs/
