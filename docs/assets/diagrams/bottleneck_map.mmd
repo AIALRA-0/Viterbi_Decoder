@@ -1,0 +1,11 @@
+flowchart TD
+    A[Viterbi Decoder<br/>维特比译码器] --> B[Dependency-bound<br/>路径度量递推依赖]
+    A --> C[Compute-bound<br/>ACS 加法比较]
+    A --> D[Capacity-bound<br/>survivor memory]
+    A --> E[Accuracy-bound<br/>soft/PM 位宽]
+    A --> F[Bandwidth-bound<br/>PS-PL 数据搬运]
+    B --> G[Pipeline/Retiming<br/>流水线/重定时]
+    C --> H[Parallel ACS<br/>并行加比选]
+    D --> I[Traceback depth sweep<br/>回溯深度扫描]
+    E --> J[Quantization/Normalization<br/>量化/归一化]
+    F --> K[AXI packing/DMA<br/>数据打包和搬运]

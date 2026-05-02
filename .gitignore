@@ -1,0 +1,28 @@
+# Local environment
+config/local.env
+*.log.local
+
+# Vivado/Vitis generated cache
+.Xil/
+*.jou
+*.log
+*.str
+vivado/build/**/project_*/
+vitis/**/Debug/
+vitis/**/Release/
+
+# Bitstreams and generated hardware files: commit only intentionally
+*.bit
+*.bin
+*.ltx
+*.xsa
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Private board documents must not be committed
+board_docs/
+private_docs/

@@ -1,0 +1,6 @@
+flowchart TD
+    A[Level 0 Python unit tests<br/>算法单元测试] --> B[Level 1 BER sanity<br/>误码率趋势检查]
+    B --> C[Level 2 RTL module tests<br/>模块级硬件测试]
+    C --> D[Level 3 RTL full regression<br/>完整译码器 bit-true 回归]
+    D --> E[Level 4 Vivado implementation<br/>真实器件综合实现]
+    E --> F[Level 5 Board UART validation<br/>真实开发板串口验收]

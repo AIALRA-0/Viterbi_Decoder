@@ -1,0 +1,9 @@
+flowchart LR
+    S00t[00 at t] -->|input 0| S00n[00 at t+1]
+    S00t -->|input 1| S10n[10 at t+1]
+    S01t[01 at t] -->|input 0| S00n
+    S01t -->|input 1| S10n
+    S10t[10 at t] -->|input 0| S01n[01 at t+1]
+    S10t -->|input 1| S11n[11 at t+1]
+    S11t[11 at t] -->|input 0| S01n
+    S11t -->|input 1| S11n

@@ -1,0 +1,57 @@
+{
+  "project": "Resource-Aware Soft-Decision Viterbi Decoder on ZU4EV",
+  "language_policy": "Chinese-first; explain first occurrence of every English technical term.",
+  "code": {
+    "type": "convolutional",
+    "rate": "1/2",
+    "constraint_length": 7,
+    "polynomials_octal": [
+      171,
+      133
+    ],
+    "tail_termination": "zero_tail",
+    "state_count": 64
+  },
+  "decoder": {
+    "decision_modes": [
+      "hard",
+      "soft3"
+    ],
+    "soft_width_bits": 3,
+    "traceback_depths": [
+      16,
+      32,
+      40,
+      64
+    ],
+    "path_metric_widths": [
+      8,
+      10,
+      12,
+      16
+    ],
+    "normalization_modes": [
+      "none",
+      "subtract_min"
+    ],
+    "default_hero": {
+      "decision_mode": "soft3",
+      "traceback_depth": 40,
+      "path_metric_width": 12,
+      "normalization": "subtract_min"
+    }
+  },
+  "board": {
+    "name": "MZU04A-4EV",
+    "device": "XCZU4EV-SFVC784-2I",
+    "interface": "PS_AXI_DMA_PL_UART",
+    "programming": "JTAG temporary download only; do not write flash by default"
+  },
+  "outputs": {
+    "model": "data/model/model_unit_test_summary.json",
+    "rtl_regression": "data/regression/rtl_regression_summary.csv",
+    "analysis": "data/analysis/",
+    "implementation": "data/impl/vivado_summary.csv",
+    "board": "data/board_runs/board_summary.csv"
+  }
+}

@@ -1,0 +1,25 @@
+# EXPERIMENTS.yaml
+
+- id: exp_template
+  phase: template
+  mode: hard
+  traceback_depth: 40
+  path_metric_width: 12
+  normalization: none
+  vector_set: no_noise
+  result: TODO
+  mismatch_count: null
+  commit: null
+
+- id: m0_env_sanity_20260502_062312
+  phase: M0
+  mode: environment
+  traceback_depth: null
+  path_metric_width: null
+  normalization: null
+  vector_set: null
+  command: "python scripts\\sanity_check_environment.py --env config\\local.env"
+  result: PASS
+  mismatch_count: null
+  commit: pending
+  notes: "pandas ABI warning and Vivado/xsct PATH warning observed; settings files exist and M0 passed."
