@@ -50,7 +50,5 @@ python scripts/run_board_validation.py --skip-build --build-info <build_info.jso
 
 Primary deliverables:
 
-```text
-Report.md
-Report.pdf
-```
+- [Report.md](Report.md)
+- [Report.pdf](Report.pdf)
