@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | README.md can orient the reader | PASS | README.md exists and M0-M7 structure is recorded |
 | Report.md complete | PASS | 17 required chapters generated |
-| Report.pdf opens | PASS | Generated from Report.md by scripts/build_final_report.py |
+| Report.pdf opens | PASS | Rendered from the current Report.md |
 | spec/viterbi_spec.json is source of truth | PASS | M0-M7 scripts consume spec or derived package |
 | model/vectors/rtl/tb/vivado/vitis/scripts complete | PASS | M1-M7 commits cover all required directories |
 | data contains raw results | PASS | data/model, data/regression, data/analysis, data/impl, data/board_runs |
@@ -20,7 +20,7 @@
 | Evidence | Path or value |
 | --- | --- |
 | Latest M7 board run | m7_board_20260502_083547 |
-| Board UART log | C:\Users\AIALRA-PORTABLE\Desktop\Vertebi\viterbi_startup_pack\src\data\board_runs\m7_board_20260502_083547\uart.log |
+| Board UART log | data/board_runs/m7_board_20260502_083547/uart.log |
 | Vivado summary | data/impl/vivado_summary.csv |
 | Sweep summary | data/analysis/sweep_results.csv |
 | Final report | Report.md and Report.pdf |
