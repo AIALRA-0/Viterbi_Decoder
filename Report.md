@@ -199,7 +199,7 @@ Viterbi Decoder 的做法是把所有可能的状态路径展开成 trellis（�
 
 ![图 1 状态数随 K 增长](docs/assets/plots/fig04_state_explosion.png)
 
-图 1：状态数随 K 指数增长。这张图说明 constraint length 增大时，trellis 状态数会按指数增长。K=7 对应 64 个状态，所以后面的 BMU、ACS、survivor memory 和 traceback 都不是 4-state 小例子那种规模。
+图 1：状态数随 K 指数增长。这张图说明 constraint length 增大时，trellis 状态数会按指数增长。K=7 对应 64 个状态，这意味着后续 BMU、ACS、survivor memory 和 traceback 都要围绕 64-state trellis 展开，硬件规模、资源占用和时序压力都明显高于 4-state 小例
 
 `[171,133]` 是卷积编码器的两条生成多项式，用八进制表示。由于本项目使用 K=7，编码器每次输出时会参考当前输入 bit 和前 6 个历史 bit，共 7 个 bit。八进制 171 转成二进制是 1111001，表示第一路输出选择对应位置为 1 的寄存器 bit 进行 XOR；八进制 133 转成二进制是 1011011，表示第二路输出选择另一组寄存器 bit 进行 XOR。因此，每输入 1 个原始 bit，编码器会按照这两条 XOR 抽头规则分别生成两个 encoded bits，这也是 rate-1/2 的来源
 
@@ -207,24 +207,26 @@ Viterbi Decoder 的做法是把所有可能的状态路径展开成 trellis（�
 
 ![图 2 硬判决和软判决分支成本](docs/assets/plots/fig05_hard_vs_soft_metric.png)
 
-图 2：硬判决和软判决分支成本形状。这张图说明 hard-decision 只有粗粒度的 0/1 判断，而 soft-decision 会保留接收值离理想 0 或理想 1 有多远，所以路径比较时信息更细。
+图 2：硬判决和软判决分支成本形状。Hard-decision 会先把接收信号直接判成 0 或 1，因此分支成本只反映“是否相同”这种粗粒度判断；例如收到 1 时，只知道它被判成了 1，却不知道这个 1 是非常可靠，还是接近判决边界。Soft-decision 则保留接收值与理想 0 或理想 1 之间的距离，本项目用 3-bit soft symbol 表示 0 到 7 的置信度刻度，因此译码器在比较候选路径时可以利用更细的可靠性信息。这样一来，即使两个候选路径在 hard-decision 下看起来差不多，soft-decision 也可能根据接收值的距离差异选出更合理的路径。
 
-hero design 的 traceback depth 设为 40，path metric width 设为 12 bit，并使用 subtract-min normalization 控制 path metric 的数值范围。这些参数不是随意选择的，而是通过参数扫描确定的
-* traceback depth：回溯深度，也就是 traceback 时往前追踪多少步再确定输出 bit。depth 太小，路径可能还没有充分收敛，容易选错；depth 太大，译码更稳定，但会增加 survivor memory 需求和延迟
-* path metric width：路径度量位宽，也就是硬件中用多少 bit 保存累计路径代价。位宽太小，path metric 可能溢出或截断；位宽太大，资源占用和时序压力会增加。
-* normalization：归一化方法，用来控制 path metric 不断累加导致数值越来越大的问题。本项目使用 subtract-min normalization，也就是每一步把所有 path metric 同时减去当前最小值，保留相对大小，同时压低数值范围。
+hero design 的核心参数， traceback depth 设为 40，path metric width 设为 12 bit，并使用 subtract-min normalization 控制 path metric 的数值范围。这些参数是通过参数扫描确定的。通过分别改变关键设计参数，观察不同配置下的 mismatch 数量和硬件代价，从而选择一个在正确性、资源和延迟之间更平衡的配置。
 
-项目分别尝试不同 traceback depth、不同 path metric width 和不同 normalization 方案，并用同一批测试向量比较 mismatch 数量。结果显示，在当前测试向量下，traceback depth 为 40、path metric width 为 12 bit、使用 subtract-min normalization 时可以实现 0 mismatch，同时不会像更大 depth 或更大位宽那样进一步增加不必要的存储、延迟和资源压力。因此，这组配置被选为最终的 hero design。
+* traceback depth：回溯深度，也就是 traceback 时向前追踪多少步再确定输出 bit。depth 太小，路径可能还没有充分收敛，容易选错；depth 太大，译码通常更稳定，但会增加 survivor memory 需求和等待时间。
+* path metric width：路径度量位宽，也就是硬件中用多少 bit 保存累计路径代价。位宽太小，path metric 可能溢出或截断，导致路径比较错误；位宽太大，则会增加 64 个状态对应的寄存器资源和时序压力。
+* normalization：归一化方法，用来控制 path metric 不断累加导致数值越来越大的问题。本项目使用 subtract-min normalization，也就是每一步把所有 path metric 同时减去当前最小值。这样不会改变路径之间的相对大小，但可以降低数值范围，减少溢出风险。
 
-参数扫描的确认过程不能只写一句“选了 40 和 12”。下面两张图就是选型依据。第一张看 traceback depth，也就是回溯深度；第二张看 path metric width，也就是路径度量位宽。这里的结论只针对当前测试向量，不把它夸大成所有信道条件下的数学定理。
+项目分别尝试了不同 traceback depth、不同 path metric width 和不同 normalization 方案，并用同一批测试向量统计 mismatch 数量。结果显示，在当前测试向量下，traceback depth 为 40、path metric width 为 12 bit、使用 subtract-min normalization 时可以实现 0 mismatch，同时不会像更大 depth 或更大位宽那样继续增加不必要的存储、延迟和资源压力。因此，这组配置被选为最终的 hero design。
+
+参数扫描的确认过程不能只写一句“选了 40 和 12”。下面两张图就是选型依据：图 3 关注 traceback depth，也就是回溯深度；图 4 关注 path metric width，也就是路径度量位宽。这里的结论只针对当前测试向量，不把它夸大成所有信道条件下的数学定理。
 
 ![图 3 回溯深度扫描](docs/assets/plots/fig03_traceback_depth_sweep.png)
 
-图 3：traceback depth 扫描趋势。depth=16 时在当前向量集里出现 8 个 mismatch；depth=32、40、64 都是 0 mismatch。因此 depth=40 的意义是：它已经达到当前测试下的 0 mismatch，同时比 depth=64 少一部分回溯存储和等待时间。
+图 3 展示了 traceback depth 对 mismatch 数量的影响。depth=16 时，当前向量集中出现 8 个 mismatch，说明回溯深度太短时，路径还没有充分收敛，译码器可能过早做出判断。depth=32、40、64 时，当前测试向量下 mismatch 都为 0。因此，depth=40 的意义是：它已经达到当前测试条件下的 0 mismatch，同时相比 depth=64 可以减少一部分 survivor memory 需求和 traceback 等待时间。
 
 ![图 4 路径度量位宽扫描](docs/assets/plots/fig04_path_metric_width_sweep.png)
 
-图 4：path metric width 扫描趋势。当前测试集在 depth=40 和 subtract-min normalization 下，8/10/12/16 bit 都没有观察到 mismatch，所以正确性曲线是平的。但位宽越大，64 个状态的 path metric register 位数越多，硬件代价仍然会上升。因此选择 12 bit 不是因为 16 bit 不正确，而是因为 12 bit 已经足够通过当前功能闭环，同时比 16 bit 更克制。
+图 4 展示了 path metric width 对硬件代价的影响。在 depth=40 和 subtract-min normalization 条件下，当前测试集里 8/10/12/16 bit 都没有观察到 mismatch，所以图中直接在每根柱子底部标出 mismatch=0；柱高表示 64 个状态需要保存的 path metric register 总位数。位宽越大，寄存器位数从 512 增加到 1024，加法器和比较器也会变宽，资源占用和时序压力都会上升。因此，选择 12 bit 不是因为 16 bit 不正确，而是因为 12 bit 已经足够通过当前功能闭环，同时比 16 bit 更克制。
+
 
 | 项目项               | 取值                                           | 数据来源                                                                  | 为什么这样选                                                                    |
 | ----------------- | -------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------- |
