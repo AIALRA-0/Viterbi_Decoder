@@ -62,11 +62,11 @@ def append_summary(summary_csv: Path, row: dict[str, object]) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build, program, and UART-capture the ZU4EV Viterbi board run.")
-    parser.add_argument("--xsa", default=r"C:\vbd_viterbi\viterbi_zu4ev_shell.xsa")
+    parser.add_argument("--xsa", default=r"%VITERBI_STAGE%\viterbi_zu4ev_shell.xsa")
     parser.add_argument("--arch", default="hero_soft3")
     parser.add_argument("--port", default="COM9")
     parser.add_argument("--baud", type=int, default=115200)
-    parser.add_argument("--stage-root", default=r"C:\codex_stage\viterbi_zu4ev")
+    parser.add_argument("--stage-root", default=r"C:\viterbi_stage\zu4ev")
     parser.add_argument("--capture-timeout", type=float, default=180.0)
     parser.add_argument("--skip-build", action="store_true")
     parser.add_argument("--build-info", default="")

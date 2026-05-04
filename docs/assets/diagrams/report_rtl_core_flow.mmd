@@ -1,13 +1,13 @@
 %%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "linear", "nodeSpacing": 45, "rankSpacing": 44}, "themeVariables": {"fontFamily": "Microsoft YaHei, Arial", "primaryColor": "#eef6fb", "primaryBorderColor": "#2e5f86", "primaryTextColor": "#111111", "lineColor": "#58738a"}}}%%
 flowchart TD
-  A["<div style='width:900px'>输入 symbols：hard bits 或 3-bit soft symbols</div>"]
-  B["<div style='width:900px'>BMU：计算每条分支的局部距离</div>"]
-  C["<div style='width:900px'>ACS array：加上旧路径代价并选择赢家</div>"]
-  D["<div style='width:900px'>Path metric bank：保存 64 个状态的当前最优代价，下一拍继续供 ACS 使用</div>"]
-  E["<div style='width:900px'>Normalizer：减去最小 path metric 控制数值范围</div>"]
-  F["<div style='width:900px'>Survivor RAM：记录每个状态每一步从哪里来</div>"]
-  G["<div style='width:900px'>Traceback engine：反向追踪 survivor 记录</div>"]
-  H["<div style='width:900px'>Decoded bits：输出恢复出的 payload bits</div>"]
+  A["<div style='width:900px'>Input symbols: hard bits or 3-bit soft symbols</div>"]
+  B["<div style='width:900px'>BMU: compute the local branch distance</div>"]
+  C["<div style='width:900px'>ACS array: add old path cost and select the winning predecessor</div>"]
+  D["<div style='width:900px'>Path metric bank: store the current best cost for all 64 states for the next ACS step</div>"]
+  E["<div style='width:900px'>Normalizer: subtract the minimum path metric to control numeric range</div>"]
+  F["<div style='width:900px'>Survivor RAM: record where each state came from at each step</div>"]
+  G["<div style='width:900px'>Traceback engine: walk backward through survivor decisions</div>"]
+  H["<div style='width:900px'>Decoded bits: emit recovered payload bits</div>"]
 
   A --> B --> C --> E --> D --> F --> G --> H
 

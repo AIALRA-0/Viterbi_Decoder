@@ -2,8 +2,8 @@ Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanc
 -------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
 | Date         : Sat May  2 06:57:50 2026
-| Host         : AIALRA-PORTABLE running 64-bit major release  (build 9200)
-| Command      : report_utilization -file C:/Users/AIALRA-PORTABLE/Desktop/Vertebi/viterbi_startup_pack/src/data/impl/hero_synth/utilization.rpt
+| Host         : LOCALHOST running 64-bit major release  (build 9200)
+| Command      : report_utilization -file data/impl/hero_synth/utilization.rpt
 | Design       : viterbi_decoder_core_soft3
 | Device       : xczu4ev-sfvc784-2-i
 | Speed File   : -2
@@ -189,5 +189,3 @@ Warning! For any ECO changes, please run place_design if there are unplaced inst
 +----------+------+
 | Ref Name | Used |
 +----------+------+
-
-

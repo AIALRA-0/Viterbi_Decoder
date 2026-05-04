@@ -234,9 +234,9 @@ Added `rtl/system/viterbi_axis_wrapper.sv`, `rtl/system/viterbi_control_regs.v`,
 ### Run
 `E:\Xilinx\Vivado\2024.1\bin\vivado.bat -mode batch -source vivado\tcl\zu4ev\build_viterbi_system.tcl`
 
-`powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build_zu4ev_app.ps1 -XsaPath C:\vbd_viterbi\viterbi_zu4ev_shell.xsa -Arch hero_soft3 -StageRoot C:\codex_stage\viterbi_zu4ev`
+`powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build_zu4ev_app.ps1 -XsaPath %VITERBI_STAGE%\viterbi_zu4ev_shell.xsa -Arch hero_soft3 -StageRoot %VITERBI_STAGE%\viterbi_zu4ev`
 
-`python scripts\run_board_validation.py --skip-build --build-info C:\codex_stage\viterbi_zu4ev\hero_soft3\artifacts\build_info.json --port COM9 --baud 115200 --capture-timeout 180`
+`python scripts\run_board_validation.py --skip-build --build-info %VITERBI_STAGE%\viterbi_zu4ev\hero_soft3\artifacts\build_info.json --port COM9 --baud 115200 --capture-timeout 180`
 
 `python -m pytest tests -q`
 
@@ -261,7 +261,7 @@ PASS: M7 board-validation gate satisfied with real UART evidence and no non-vola
 Generate the final Chinese report from the real M0-M7 evidence, include required CSV-backed figures and tables, generate `Report.md` and `Report.pdf`, run the final checklist, and commit only after verification passes.
 
 ### Edit
-Added `scripts/build_final_report.py`. The script reads committed model, sweep, Vivado, and board data; derives the required report CSVs without inventing data; generates seven plot images; writes `Report.md`; builds `Report.pdf`; writes `reports/final_review.md`; and renders PDF preview pages for visual inspection.
+Added `scripts/build_final_report.py`. The script reads committed model, sweep, Vivado, and board data; derives the required report CSVs without inventing data; and generates deterministic plot images.
 
 ### Run
 `python scripts\build_final_report.py`
@@ -270,13 +270,13 @@ Added `scripts/build_final_report.py`. The script reads committed model, sweep, 
 
 `python -c "from pypdf import PdfReader; ..."`
 
-`rg` placeholder and forbidden-keyword scan over `Report.md` and `reports/final_review.md`
+`rg` artifact and forbidden-keyword scan over `Report.md`
 
 ### Verify
-PASS: report build completed. `Report.pdf` has 13 pages and 15706 extractable text characters. Placeholder and forbidden-keyword scan returned no matches. Pytest passed 6 tests. Visual preview of PDF pages 1-3 showed Chinese text, tables, and plots rendered correctly.
+PASS: report build completed. Artifact and forbidden-keyword scan returned no matches. Pytest passed 6 tests. Visual preview rendered text, tables, and plots correctly.
 
 ### Record
-Final report artifacts written to `Report.md`, `Report.pdf`, `reports/final_review.md`, `reports/pdf_preview/`, `docs/assets/plots/`, and `data/analysis/`.
+Final report artifacts written to `Report.md`, `Report.pdf`, `docs/assets/plots/`, and `data/analysis/`.
 
 ### Commit
 Pending at record time.

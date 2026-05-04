@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Sanity check for local project environment.
-健全性检查：确认 Python、路径、串口、Vivado/Vitis 命令基本可用。
 """
 from pathlib import Path
 import argparse, os, shutil, subprocess, sys, re

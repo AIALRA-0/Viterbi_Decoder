@@ -1,8 +1,0 @@
-flowchart LR
-    A[Received symbols<br/>收到的 hard/soft 符号] --> B[BMU<br/>分支度量单元]
-    B --> C[ACS Array<br/>64 状态加比选阵列]
-    C --> D[Path Metric Bank<br/>路径度量寄存器组]
-    C --> E[Survivor RAM<br/>幸存路径存储]
-    D --> C
-    E --> F[Traceback Engine<br/>回溯引擎]
-    F --> G[Decoded bits<br/>恢复 bit 输出]

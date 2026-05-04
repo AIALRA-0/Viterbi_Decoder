@@ -4,7 +4,7 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$Arch,
     [switch]$ForcePlatformRegen,
-    [string]$StageRoot = 'C:\codex_stage\viterbi_zu4ev',
+    [string]$StageRoot = 'C:\viterbi_stage\zu4ev',
     [string]$XsctBin = $(if ($env:XSCT_BIN) { $env:XSCT_BIN } else { 'E:\Xilinx\Vitis\2024.1\bin\xsct.bat' }),
     [string]$GccExe = $(if ($env:AARCH64_GCC) { $env:AARCH64_GCC } else { 'E:\Xilinx\Vitis\2024.1\gnu\aarch64\nt\aarch64-none\bin\aarch64-none-elf-gcc.exe' })
 )
@@ -54,7 +54,7 @@ function Test-PlatformArtifacts {
         }
     }
 
-    $stampPath = Join-Path $PlatformDir '.codex_xsa.sha256'
+    $stampPath = Join-Path $PlatformDir '.xsa.sha256'
     if (-not (Test-Path $stampPath)) {
         return $false
     }
@@ -122,7 +122,7 @@ if (-not $reusePlatform) {
         Write-Warning "XSCT returned $xsctExitCode after writing required platform artifacts; continuing. See $xsctLog"
     }
 
-    Set-Content -Path (Join-Path $platformDir '.codex_xsa.sha256') -Value $currentXsaHash -Encoding ASCII
+    Set-Content -Path (Join-Path $platformDir '.xsa.sha256') -Value $currentXsaHash -Encoding ASCII
 } else {
     $xsctLog = Join-Path $artifactDir 'xsct_platform.log'
 }

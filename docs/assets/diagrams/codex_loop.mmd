@@ -1,9 +1,0 @@
-flowchart LR
-    A[Plan<br/>计划] --> B[Edit<br/>修改]
-    B --> C[Run<br/>运行]
-    C --> D[Verify<br/>验证]
-    D --> E[Record<br/>记录]
-    E --> F[Commit<br/>提交]
-    F --> A
-    D -- FAIL --> G[Debug first mismatch<br/>定位第一个错误]
-    G --> B

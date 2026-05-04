@@ -1,8 +1,0 @@
-flowchart TB
-    T0[time t<br/>当前时刻] --> R0[64 decision bits<br/>64 个状态赢家]
-    T1[time t+1<br/>下一时刻] --> R1[64 decision bits]
-    T2[time t+2<br/>再下一时刻] --> R2[64 decision bits]
-    R0 --> RAM[Survivor RAM circular buffer<br/>循环幸存路径存储]
-    R1 --> RAM
-    R2 --> RAM
-    RAM --> TB[Traceback engine<br/>回溯引擎倒着读取]

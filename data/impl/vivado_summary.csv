@@ -1,4 +1,4 @@
 run_id,kind,top,returncode,status,lut,ff,bram,dsp,wns_ns,tns_ns,total_power_w,report_dir
-m6_synth_viterbi_decoder_core,synth,viterbi_decoder_core,0,PASS,8116,15243,0,0,6.956,0.000,0.410,C:\Users\AIALRA-PORTABLE\Desktop\Vertebi\viterbi_startup_pack\src\data\impl\baseline_synth
-m6_synth_viterbi_decoder_core_soft3,synth,viterbi_decoder_core_soft3,0,PASS,10570,17118,0,0,-23.241,-17607.301,0.469,C:\Users\AIALRA-PORTABLE\Desktop\Vertebi\viterbi_startup_pack\src\data\impl\hero_synth
-m6_impl_viterbi_decoder_core_soft3,impl,viterbi_decoder_core_soft3,0,PASS,10647,17118,0,0,-20.433,-16272.939,0.487,C:\Users\AIALRA-PORTABLE\Desktop\Vertebi\viterbi_startup_pack\src\data\impl\hero_impl
+m6_synth_viterbi_decoder_core,synth,viterbi_decoder_core,0,PASS,8116,15243,0,0,6.956,0.000,0.410,data\impl\baseline_synth
+m6_synth_viterbi_decoder_core_soft3,synth,viterbi_decoder_core_soft3,0,PASS,10570,17118,0,0,-23.241,-17607.301,0.469,data\impl\hero_synth
+m6_impl_viterbi_decoder_core_soft3,impl,viterbi_decoder_core_soft3,0,PASS,10647,17118,0,0,-20.433,-16272.939,0.487,data\impl\hero_impl

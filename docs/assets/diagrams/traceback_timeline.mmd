@@ -1,6 +1,0 @@
-flowchart LR
-    A[Receive symbols<br/>收到编码符号] --> B[Write survivor decisions<br/>写赢家记录]
-    B --> C[Wait traceback depth<br/>等待回溯窗口填满]
-    C --> D[Start from best state<br/>从最佳终点开始]
-    D --> E[Walk backward<br/>倒着查账本]
-    E --> F[Emit decoded bit<br/>输出恢复 bit]

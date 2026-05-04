@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Open a serial port and optionally capture output for a few seconds.
-串口冒烟测试：确认 UART 端口能打开，并保存短日志。
 """
 import argparse, time, sys
 from pathlib import Path

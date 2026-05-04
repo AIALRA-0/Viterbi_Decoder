@@ -1,8 +1,0 @@
-flowchart LR
-    P0[Previous state p0<br/>前驱状态 0] --> A0[Add PM + BM0<br/>路径成本加分支成本]
-    P1[Previous state p1<br/>前驱状态 1] --> A1[Add PM + BM1<br/>路径成本加分支成本]
-    A0 --> C{Compare<br/>比较谁更小}
-    A1 --> C
-    C --> S[Select survivor<br/>选择幸存路径]
-    S --> N[Next state metric<br/>新状态路径度量]
-    S --> D[Decision bit<br/>记录赢家]

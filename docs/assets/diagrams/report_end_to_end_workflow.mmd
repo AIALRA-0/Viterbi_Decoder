@@ -1,14 +1,14 @@
 %%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "linear", "nodeSpacing": 45, "rankSpacing": 44}, "themeVariables": {"fontFamily": "Microsoft YaHei, Arial", "primaryColor": "#eef6fb", "primaryBorderColor": "#2e5f86", "primaryTextColor": "#111111", "lineColor": "#58738a"}}}%%
 flowchart TD
-  A["<div style='width:960px'>设计规格：固定 K、码率、多项式、soft3、depth 和位宽</div>"]
-  B["<div style='width:960px'>Python golden model：得到可对照的软件标准答案</div>"]
-  C["<div style='width:960px'>测试向量：固化同一批输入和 golden output</div>"]
-  D["<div style='width:960px'>RTL 译码核心：把 Viterbi 算法写成硬件结构</div>"]
-  E["<div style='width:960px'>RTL 仿真：逐 bit 比较 RTL 输出和 golden output</div>"]
-  F["<div style='width:960px'>参数扫描：比较 depth、path metric width 和 normalization</div>"]
-  G["<div style='width:960px'>Vivado 综合与实现：检查资源、时序、功耗和关键路径</div>"]
-  H["<div style='width:960px'>ZU4EV 板级验证：JTAG 下载，UART 捕获结果</div>"]
-  I["<div style='width:960px'>报告整理：把数据、图和限制写清楚</div>"]
+  A["<div style='width:960px'>Design specification: fix K, rate, polynomials, soft3, depth, and metric width</div>"]
+  B["<div style='width:960px'>Python golden model: produce the trusted software reference</div>"]
+  C["<div style='width:960px'>Test vectors: freeze one shared input and golden-output set</div>"]
+  D["<div style='width:960px'>RTL decoder core: map the Viterbi algorithm into hardware</div>"]
+  E["<div style='width:960px'>RTL simulation: compare RTL output and golden output bit by bit</div>"]
+  F["<div style='width:960px'>Parameter sweep: compare depth, path metric width, and normalization</div>"]
+  G["<div style='width:960px'>Vivado synthesis and implementation: inspect resources, timing, power, and critical paths</div>"]
+  H["<div style='width:960px'>ZU4EV board validation: download through JTAG and capture UART results</div>"]
+  I["<div style='width:960px'>Report assembly: record data, figures, limitations, and conclusions</div>"]
 
   A --> B --> C --> D --> E --> F --> G --> H --> I
 

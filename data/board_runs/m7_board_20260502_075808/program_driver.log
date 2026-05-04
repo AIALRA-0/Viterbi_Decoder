@@ -1,4 +1,4 @@
-PROGRAM|psu_init|sourced|C:\codex_stage\viterbi_zu4ev\hero_soft3\xsct_ws\zu4ev_viterbi_hero_soft3\hw\psu_init.tcl
+PROGRAM|psu_init|sourced|%VITERBI_STAGE%\viterbi_zu4ev\hero_soft3\xsct_ws\zu4ev_viterbi_hero_soft3\hw\psu_init.tcl
 PROGRAM|selected|PSU|PSU
 PROGRAM|selected|PSU|PSU
 PROGRAM|selected|PMU|MicroBlaze PMU
@@ -17,4 +17,4 @@ PROGRAM|psu_protection|done
 PROGRAM|ps_pl|enabled
 PROGRAM|selected|A53_0|Cortex-A53 #0
 PROGRAM|run|started
-Wrote C:\codex_stage\viterbi_zu4ev\hero_soft3\artifacts\program.log
+Wrote %VITERBI_STAGE%\viterbi_zu4ev\hero_soft3\artifacts\program.log

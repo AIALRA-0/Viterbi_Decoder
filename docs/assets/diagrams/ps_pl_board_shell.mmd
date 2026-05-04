@@ -1,8 +1,0 @@
-flowchart TB
-    A[PS Cortex-A53<br/>处理系统裸机程序] --> B[AXI-Lite Registers<br/>控制寄存器]
-    A --> C[AXI DMA MM2S<br/>内存到数据流]
-    C --> D[Viterbi AXI Stream Wrapper<br/>译码器流接口封装]
-    D --> E[AXI DMA S2MM<br/>数据流回内存]
-    E --> A
-    A --> F[UART<br/>串口 PASS/FAIL 输出]
-    A --> G[OCM/DDR Buffers<br/>输入输出缓冲区]

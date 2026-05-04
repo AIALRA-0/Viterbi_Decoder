@@ -3,7 +3,7 @@
 # Decision D-001: Use K=7 [171,133] as default formal target
 
 ## Context
-K=7 [171,133] 是经典卷积码配置，状态数 64，足够体现 VLSI 架构复杂度。
+K=7 [171,133] is a classic convolutional-code configuration with 64 states, which is large enough to expose meaningful VLSI architecture pressure.
 
 ## Options
 K=3 toy design, K=5 medium design, K=7 formal design.
@@ -12,10 +12,10 @@ K=3 toy design, K=5 medium design, K=7 formal design.
 Use K=7 [171,133] as the formal target, and optionally use K=3 only for debug smoke tests.
 
 ## Reason
-K=7 有足够复杂度，适合课程 open-ended project；K=3 只能作为教学和 debug 工具。
+K=7 has enough complexity for the open-ended course project; K=3 is kept only as a teaching and debug smoke-test configuration.
 
 ## Consequence
-RTL 和 traceback 复杂度更高，需要更严格的自动化验证。
+RTL and traceback complexity increase, so automated verification must be stricter.
 
 # Decision D-002: Keep local machine configuration out of git
 
