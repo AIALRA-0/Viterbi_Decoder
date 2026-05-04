@@ -1,0 +1,16 @@
+%%{init: {"theme": "base", "flowchart": {"htmlLabels": true, "curve": "linear", "nodeSpacing": 45, "rankSpacing": 44}, "themeVariables": {"fontFamily": "Microsoft YaHei, Arial", "primaryColor": "#eef6fb", "primaryBorderColor": "#2e5f86", "primaryTextColor": "#111111", "lineColor": "#58738a"}}}%%
+flowchart TD
+  A["<div style='width:960px'>电脑端脚本：启动下载和串口捕获</div>"]
+  B["<div style='width:960px'>JTAG：下载 bitstream 和 ELF</div>"]
+  C["<div style='width:960px'>PS ARM：运行 bare-metal test app</div>"]
+  D["<div style='width:960px'>OCM input buffer：存放输入 soft symbols</div>"]
+  E["<div style='width:960px'>AXI DMA MM2S：把输入从 OCM 送到 PL stream</div>"]
+  F["<div style='width:960px'>PL Viterbi core：执行 soft3 decode</div>"]
+  G["<div style='width:960px'>AXI DMA S2MM：把 decoded bits 写回 OCM</div>"]
+  H["<div style='width:960px'>PS ARM compare：和 golden output 逐 bit 比较</div>"]
+  I["<div style='width:960px'>UART log：打印 cycles、mismatch 和 PASS/FAIL</div>"]
+
+  A --> B --> C --> D --> E --> F --> G --> H --> I
+
+  classDef box fill:#eef6fb,stroke:#2e5f86,stroke-width:1.4px,color:#111111;
+  class A,B,C,D,E,F,G,H,I box;

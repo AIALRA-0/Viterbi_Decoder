@@ -217,11 +217,11 @@ hero design 的核心参数， traceback depth 设为 40，path metric width 设
 
 项目分别尝试了不同 traceback depth、不同 path metric width 和不同 normalization 方案，并用同一批测试向量统计 mismatch 数量。结果显示，在当前测试向量下，traceback depth 为 40、path metric width 为 12 bit、使用 subtract-min normalization 时可以实现 0 mismatch，同时不会像更大 depth 或更大位宽那样继续增加不必要的存储、延迟和资源压力。因此，这组配置被选为最终的 hero design。
 
-参数扫描的确认过程不能只写一句“选了 40 和 12”。下面两张图就是选型依据：图 3 关注 traceback depth，也就是回溯深度；图 4 关注 path metric width，也就是路径度量位宽。这里的结论只针对当前测试向量，不把它夸大成所有信道条件下的数学定理。
 
 ![图 3 回溯深度扫描](docs/assets/plots/fig03_traceback_depth_sweep.png)
 
 图 3 展示了 traceback depth 对 mismatch 数量的影响。depth=16 时，当前向量集中出现 8 个 mismatch，说明回溯深度太短时，路径还没有充分收敛，译码器可能过早做出判断。depth=32、40、64 时，当前测试向量下 mismatch 都为 0。因此，depth=40 的意义是：它已经达到当前测试条件下的 0 mismatch，同时相比 depth=64 可以减少一部分 survivor memory 需求和 traceback 等待时间。
+
 
 ![图 4 路径度量位宽扫描](docs/assets/plots/fig04_path_metric_width_sweep.png)
 
@@ -243,63 +243,61 @@ hero design 的核心参数， traceback depth 设为 40，path metric width 设
 
 ## 4. 仓库结构与事实源
 
-本仓库的组织原则是：代码、数据、报告不要混在一起。算法模型放在模型目录，硬件实现放在 RTL 目录，真实实验结果放在 data 目录，报告只引用这些已经落盘的结果。这样做的好处是，报告中每个数字都可以回到对应文件里检查，而不是只靠文字描述。
+本仓库的组织原则是代码、数据、报告不要混在一起。
+算法模型放在模型目录，硬件实现放在 RTL 目录，真实实验结果放在 data 目录，报告只引用这些已经落盘的结果。这样做的好处是，报告中每个数字都可以回到对应文件里检查，而不是只靠文字描述。
 
 仓库首层结构如下：
 
 ```text
 src/
-├── README.md                  项目入口说明，用来快速了解如何运行和验证。
-├── Report.md                  本报告的 Markdown 源文件。
-├── Report.pdf                 由 Report.md 渲染出的提交版 PDF。
-├── spec/                      设计参数事实源，K、码率、多项式和默认 hero 参数都在这里。
-├── config/                    本机工具链、串口、板卡和 GitHub 地址配置。
-├── model/                     Python encoder、channel model 和 golden decoder。
-├── vectors/                   统一测试向量，每个 case 都有输入、输出和 metadata。
-├── rtl/                       Viterbi 译码器核心和板级 wrapper 的 RTL 实现。
-├── tb/                        xsim testbench，用来把 RTL 输出和 golden output 对齐比较。
-├── vivado/                    Vivado 综合、实现和 ZU4EV block design 构建脚本。
-├── vitis/                     ZU4EV bare-metal app，用于 DMA 传输和 UART 打印。
-├── scripts/                   自动生成、仿真、综合、上板和报告辅助脚本。
-├── data/                      所有模型、仿真、参数扫描、Vivado 和板级运行结果。
-├── docs/                      报告中使用的图、流程图和板级图片。
-├── reports/                   最终检查、PDF 预览和阶段性 review 文件。
-├── WORKLOG.md                 每个阶段实际执行了什么命令、遇到什么问题、结果如何。
-├── DECISIONS.md               关键工程取舍记录，例如为什么用 OCM buffer。
-└── EXPERIMENTS.yaml           实验索引，用 run_id 把命令、结果和数据文件关联起来。
+|-- README.md                  项目入口说明，用来快速了解如何运行和验证。
+|-- Report.md                  本报告的 Markdown 源文件。
+|-- Report.pdf                 由 Report.md 渲染出的提交版 PDF。
+|-- spec/                      设计参数事实源，K、码率、多项式和默认 hero 参数都在这里。
+|-- config/                    本机工具链、串口、板卡和 GitHub 地址配置。
+|-- model/                     Python encoder、channel model 和 golden decoder。
+|-- vectors/                   统一测试向量，每个 case 都有输入、输出和 metadata。
+|-- rtl/                       Viterbi 译码器核心和板级 wrapper 的 RTL 实现。
+|-- tb/                        xsim testbench，用来把 RTL 输出和 golden output 对齐比较。
+|-- vivado/                    Vivado 综合、实现和 ZU4EV block design 构建脚本。
+|-- vitis/                     ZU4EV bare-metal app，用于 DMA 传输和 UART 打印。
+|-- scripts/                   自动生成、仿真、综合、上板和报告辅助脚本。
+|-- data/                      所有模型、仿真、参数扫描、Vivado 和板级运行结果。
+|-- docs/                      报告中使用的图、流程图和板级图片。
+|-- reports/                   最终检查、PDF 预览和阶段性 review 文件。
+|-- WORKLOG.md                 每个阶段实际执行了什么命令、遇到什么问题、结果如何。
+|-- DECISIONS.md               关键工程取舍记录，例如为什么用 OCM buffer。
+`-- EXPERIMENTS.yaml           实验索引，用 run_id 把命令、结果和数据文件关联起来。
 ```
 
-这里最重要的是 `spec/` 和 `data/`。`spec/viterbi_spec.json` 是设计参数事实源；`data/model/` 记录 Python 测试；`data/regression/` 记录 RTL 仿真；`data/analysis/` 记录参数扫描和 BER 近似分析；`data/impl/` 记录 Vivado 资源、时序和功耗估计；`data/board_runs/` 记录真实 UART 日志。报告中的数字都从这些结果来，不手工编造。
+这里最重要的是 `spec/` 和 `data/`
+* `spec/viterbi_spec.json` 是设计参数事实源
+* `data/model/` 记录 Python 测试
+* `data/regression/` 记录 RTL 仿真；
+* `data/analysis/` 记录参数扫描和 BER 近似分析；
+* `data/impl/` 记录 Vivado 资源、时序和功耗估计；
+* `data/board_runs/` 记录真实 UART 日志
 
 ## 5. 端到端工程流程
-
-本项目不是只写一个 decoder module，而是做了从算法到上板的完整闭环。流程要从上往下看，因为下面每一步都依赖上一步的输出。
 
 ![图 5 端到端工程闭环](docs/assets/plots/fig05_end_to_end_workflow.png)
 
 图 5：端到端工程闭环。这张图强调的是每一步产生什么、下一步为什么需要它。设计规格先固定参数，Python model 先建立标准答案，测试向量把输入输出固定下来，RTL 仿真证明硬件逻辑和软件答案一致，参数扫描解释为什么选择当前 hero 参数，Vivado 告诉我们资源和时序压力，板级验证最后证明数据真的能经过 PS、DMA、PL 和 UART 跑通。
 
-这里每一步的作用如下。
+这里每一步的作用如下
 
-第一步是设计规格。它回答“我们到底要做哪一种 Viterbi Decoder”。如果没有统一规格，Python、RTL 和 board app 很容易各用一套 K、tail termination 或 soft symbol 格式，最后即使结果不一致也很难定位。
-
-第二步是 Python golden model。它的作用不是追求速度，而是追求清楚和可信。所有后续的 RTL output、board output 都要和它对齐比较。
-
-第三步是测试向量。测试向量就像一套统一试卷，同一道题发给 Python、RTL 仿真和真实开发板。这样调试时不用猜输入是否相同。
-
-第四步是 RTL core。这个阶段把 BMU、ACS、path metric、survivor memory 和 traceback 都写成硬件结构。
-
-第五步是仿真。仿真阶段不只看 waveform，而是把 decoded bits 和 golden output 逐 bit 比较。只有 bit-true comparison 通过，才说明功能真的对齐。
-
-第六步是参数扫描。这个阶段比较 traceback depth、path metric width 和 normalization 的影响，用 mismatch 数量确认 hero 选型，而不是凭感觉选参数。
-
-第七步是 Vivado 综合与实现。这个阶段回答“功能正确的设计能不能放进 FPGA，并且能不能按目标时钟跑”。本项目在这里发现 soft-decision 版本没有达到 100 MHz timing closure。
-
-第八步是板级验证。这个阶段把设计放到真实 ZU4EV 板上，通过 JTAG 下载 bitstream 和 ELF，通过 UART 抓取运行日志。它验证的是整个 PS/PL/DMA 数据路径，不只是 decoder core。
+* 设计规格：回答“我们到底要做哪一种 Viterbi Decoder”。如果没有统一规格，Python、RTL 和 board app 很容易各用一套 K、tail termination 或 soft symbol 格式，最后即使结果不一致也很难定位。
+* Python golden model：作用不是追求速度，而是追求清楚和可信。所有后续的 RTL output、board output 都要和它对齐比较。
+* 测试向量：像一套统一试卷，同一道题发给 Python、RTL 仿真和真实开发板。这样调试时不用猜输入是否相同。
+* RTL core：把 BMU、ACS、path metric、survivor memory 和 traceback 都写成硬件结构。
+* 仿真：不只看 waveform，而是把 decoded bits 和 golden output 逐 bit 比较。只有 bit-true comparison 通过，才说明功能真的对齐。
+* 参数扫描：比较 traceback depth、path metric width 和 normalization 的影响，用 mismatch 数量确认 hero 选型，而不是凭感觉选参数。
+* Vivado 综合与实现：回答“功能正确的设计能不能放进 FPGA，并且能不能按目标时钟跑”。本项目在这里发现 soft-decision 版本没有达到 100 MHz timing closure。
+* 板级验证：把设计放到真实 ZU4EV 板上，通过 JTAG 下载 bitstream 和 ELF，通过 UART 抓取运行日志。它验证的是整个 PS/PL/DMA 数据路径，不只是 decoder core。
 
 ## 6. 分支度量、软判决与定点路径度量
 
-这一部分需要单独讲清楚，因为它决定了 Viterbi Decoder 到底在比较什么。前面说 Viterbi 是找“最像”的路径，那么这里的 branch metric 就是“像不像”的打分方式。
+前面说 Viterbi 是找最像的路径，那么这里的 branch metric 就是像不像的打分方式。
 
 先看 hard-decision。因为本项目是 rate-1/2，所以编码器每输入 1 个 payload bit，就会输出 2 个 encoded bits。也就是说，trellis 上每走一步，接收端都会拿到一组 2-bit 的 received bits。硬判决时，每个 received bit 只有 0 或 1，所以一条分支的距离只能是 0、1、2 三种。
 
@@ -327,11 +325,11 @@ received = 01
 distance = 2
 ```
 
-所以 hard-decision 的 0、1、2 不是随便来的，而是因为每一步正好有两个 encoded bits。0 表示两个都对，1 表示错一个，2 表示两个都错。这也是为什么 hard-decision 信息比较粗：它只知道“错了几个 bit”，不知道每个 bit 错得有多可疑。
+所以 hard-decision 每一步正好有两个 encoded bits。0 表示两个都对，1 表示错一个，2 表示两个都错。这也是为什么 hard-decision 信息比较粗，它只知道错了几个 bit，不知道每个 bit 错得有多可疑。
 
-soft-decision 的区别在于，接收端不是只给 0 或 1，而是给一个 3-bit 数值，也就是 0 到 7。这里可以把 0 理解成“非常像 0”，把 7 理解成“非常像 1”，中间的 3 或 4 则表示“不太确定”。因此 soft-decision 可以表达置信度。
+soft-decision 的区别在于，接收端不是只给 0 或 1，而是给一个 3-bit 数值，也就是 0 到 7。这里可以把 0 理解成非常像 0，把 7 理解成非常像 1，中间的 3 或 4 则表示“不太确定”。因此 soft-decision 可以表达置信度。
 
-本项目的 soft3 branch metric 这样算：如果候选分支期望某个 encoded bit 是 0，就把理想值看成 0；如果期望是 1，就把理想值看成 7。然后用收到的 soft symbol 和理想值做绝对差。因为 rate-1/2 每一步有两个 encoded bits，所以两个差值相加就是这一条 branch 的成本。
+本项目的 soft3 branch metric 这样算，如果候选分支期望某个 encoded bit 是 0，就把理想值看成 0；如果期望是 1，就把理想值看成 7。然后用收到的 soft symbol 和理想值做绝对差。因为 rate-1/2 每一步有两个 encoded bits，所以两个差值相加就是这一条 branch 的成本。
 
 例如某条候选分支期望输出 `10`，也就是第一位理想上应该像 1，第二位理想上应该像 0。如果接收的 soft3 值是 `(6,2)`，那么成本是：
 
@@ -342,7 +340,7 @@ received     = 6 2
 distance     = |6-7| + |2-0| = 1 + 2 = 3
 ```
 
-这个 3 的意义是：第一位很像 1，只差 1；第二位有点偏离 0，差 2；两者合起来这条分支的局部代价是 3。另一条候选分支如果期望输出 `00`，理想值就是 `(0,0)`，同样接收 `(6,2)` 时成本会变成：
+这个 3 的意义是，第一位很像 1，只差 1；第二位有点偏离 0，差 2；两者合起来这条分支的局部代价是 3。另一条候选分支如果期望输出 `00`，理想值就是 `(0,0)`，同样接收 `(6,2)` 时成本会变成：
 
 ```text
 expected bits = 0 0
@@ -351,25 +349,46 @@ received     = 6 2
 distance     = |6-0| + |2-0| = 6 + 2 = 8
 ```
 
-因此，接收 `(6,2)` 时，`10` 这条分支比 `00` 更合理。soft-decision 的优势就在这里：它不是只看 6 最后会被硬判成 1，而是知道它“很像 1”；也不是只看 2 最后会被硬判成 0，而是知道它离 0 还有一点距离。
+因此，接收 `(6,2)` 时，`10` 这条分支比 `00` 更合理。soft-decision 的优势就在这里，它不是只看 6 最后会被硬判成 1，而是知道它“很像 1”；也不是只看 2 最后会被硬判成 0，而是知道它离 0 还有一点距离。
 
-Path metric 是把每一步 branch metric 累加起来。问题是硬件里的寄存器不能无限大。如果一帧很长，path metric 不断累加，数值可能越来越大，最后超过固定 bit width 能表示的范围。为了解决这个问题，本项目使用 subtract-min normalization。
+Path metric 是把每一步 branch metric 沿着同一条候选路径累加起来。Branch metric 只描述某一步状态转移和当前接收符号之间的差距，而 path metric 描述的是从起点走到当前状态为止，整条路径和接收序列之间的累计差距。Viterbi Decoder 每走一步，都会把新的 branch metric 加到已有 path metric 上，再比较不同候选路径的总代价。总代价越小，说明这条路径整体上越符合接收数据，也就越可能是真实发送路径
 
-subtract-min normalization 的做法是：每一步算完所有状态的 path metric 后，找出当前最小值，然后所有 path metric 一起减掉这个最小值。因为所有候选路径都减掉同一个数，所以相对大小不变，赢家不会变；但是数值整体被压低了，更适合固定宽度硬件。
+但是在硬件实现中，path metric 不能无限增长。软件里可以用较大的整数类型暂时保存累计值，而 FPGA 里的寄存器位宽必须提前固定。例如 path metric width 如果设为 12 bit，那么它最多只能表示有限范围内的数值。一帧越长，branch metric 累加次数越多，path metric 就越可能变大。如果不加控制，数值可能超过固定 bit width 能表示的范围，造成溢出或截断。一旦 path metric 溢出，路径之间的大小关系就可能被破坏，ACS 可能会选择错误的 survivor path。
+
+为了解决这个问题，本项目使用 subtract-min normalization。它的思想是：Viterbi Decoder 真正在意的不是每条路径的绝对代价是多少，而是哪条路径比另一条路径更小。换句话说，路径选择只依赖相对大小，而不是绝对数值。例如三条路径的 path metric 是：
+
+```
+Path A = 105
+Path B = 112
+Path C = 130
+```
+
+最优路径是 Path A。如果所有路径同时减去当前最小值 105，就得到：
+```
+Path A = 0
+Path B = 7
+Path C = 25
+```
+
+可以看到，数值整体变小了，但三条路径的相对顺序没有变化。Path A 仍然最小，Path B 仍然第二，Path C 仍然最大。因此，subtract-min normalization 不会改变 Viterbi 的路径选择结果，却能把 path metric 压回较小范围内，降低固定宽度寄存器溢出的风险。
+
+具体到硬件流程中，subtract-min normalization 通常发生在每个 trellis step 的 ACS 更新之后。译码器先为所有状态计算新的 path metric，然后找出这些 path metric 中的最小值，再让所有状态的 path metric 同时减去这个最小值。这样做的结果是，每一步之后至少有一个状态的 path metric 被归一化为 0，其他状态保存的是相对这个最优状态多出来的代价。由于所有状态减去的是同一个数，所以不会影响后续 ACS 比较谁更小，只是把数值范围控制得更适合硬件实现。
 
 ![图 6 减最小值归一化](docs/assets/plots/fig09_normalization_effect.png)
 
-图 6：subtract-min normalization 的作用。图中每条路径的绝对数值被压低，但路径之间谁大谁小没有改变。它解决的是硬件数值范围问题，不改变 Viterbi 的路径选择逻辑。
+图 6 展示了 subtract-min normalization 的作用。图中每条路径的绝对 path metric 数值都被整体压低，但路径之间的相对大小没有改变。也就是说，归一化前哪条路径最优，归一化后仍然是哪条路径最优。它解决的是固定宽度硬件中的数值范围和溢出风险问题，而不是改变 Viterbi Decoder 的路径选择逻辑
 
 ## 7. RTL 架构
 
-RTL 架构可以分成两层。第一层是 decoder kernel，也就是只负责 Viterbi 译码的核心。第二层是 board shell，也就是为了上板运行而加在核心外面的 AXI Stream、AXI-Lite、DMA、PS/PL 连接和调试寄存器。前者回答“译码怎么算”，后者回答“数据怎么进出真实板子”。
+RTL 架构可以分成两个层次：
+* decoder kernel：Viterbi 译码核心，只负责译码算法本身，回答译码结果怎么算出来,更关注算法硬件化，例如 branch metric 怎么算、64 个状态怎么更新、survivor decision 怎么保存、traceback 怎么恢复 bit
+* board shell：为了真实上板运行而加在核心外面的接口和控制逻辑，包括 AXI Stream、AXI-Lite、DMA、PS/PL 连接和调试寄存器，回答数据怎么送进硬件、结果怎么从板子取回来，例如 ARM 端程序如何把输入数据送到 PL，DMA 如何搬运数据，控制寄存器如何启动译码器，UART 如何打印最终验证结果
 
 ![图 7 RTL 译码核心结构](docs/assets/plots/fig07_rtl_core_flow.png)
 
-图 7：RTL 译码核心结构。这张图说明数据在 Viterbi core 里的流动顺序：先算每条分支像不像，再更新每个状态的最优路径，随后记录 survivor，最后 traceback 得到 decoded bits。
+图 7 展示了 RTL 译码核心内部的数据流。接收符号先进入 BMU，BMU 计算每条 trellis 分支和接收数据之间的差距；随后 ACS array 使用这些 branch metric 更新每个状态的最优 path metric，并选择每个状态当前最合理的前驱路径；survivor RAM 记录这些选择结果；最后 traceback engine 根据 survivor RAM 中保存的记录反向追踪路径，并输出 decoded bits。换句话说，这张图对应的是 Viterbi Decoder 从“接收符号”到“恢复原始 bit”的硬件流水
 
-核心模块逐个解释如下。
+其中的核心模块
 
 `bmu_hard.sv` 是 hard-decision branch metric unit。它接收 2-bit 的 hard received bits，并和每条候选分支的 expected bits 比较，输出 0、1、2 三种距离。
 
@@ -389,25 +408,25 @@ RTL 架构可以分成两层。第一层是 decoder kernel，也就是只负责 
 
 `viterbi_decoder_core_soft3.sv` 是 soft-decision hero core 的顶层。它把 BMU、ACS、normalization、survivor RAM 和 traceback 串起来，形成完整译码器。
 
-板级相关 RTL 也需要说明。`viterbi_axis_wrapper.sv` 把 core 包成 AXI Stream 输入输出形式，让 DMA 可以直接送入 soft3 symbols 并取回 decoded bits。`viterbi_control_regs.v` 提供 AXI-Lite 控制寄存器，包括输入长度、状态、周期计数、seen/emitted 计数等调试信息。`viterbi_zu4ev_shell.v` 则把译码核心接入 ZU4EV 的 PS/PL 系统。
+板级相关 RTL 也需要说明
+
+`viterbi_axis_wrapper.sv` 把 core 包成 AXI Stream 输入输出形式，让 DMA 可以直接送入 soft3 symbols 并取回 decoded bits
+
+`viterbi_control_regs.v` 提供 AXI-Lite 控制寄存器，包括输入长度、状态、周期计数、seen/emitted 计数等调试信息
+
+`viterbi_zu4ev_shell.v` 则把译码核心接入 ZU4EV 的 PS/PL 系统。
 
 ## 8. 验证方法
 
-验证原则很简单：不能只说“仿真看起来对”，必须让输出 bits 和 golden output 逐 bit 对齐。Waveform 只用于定位错误，例如看 TLAST、valid、ready 或 survivor 写入是否异常；最终 PASS/FAIL 必须来自 bit-true comparison。
+验证原则很简单，必须让输出 bits 和 golden output 逐 bit 对齐。Waveform 只用于定位错误，例如看 TLAST、valid、ready 或 survivor 写入是否异常；最终 PASS/FAIL 必须来自 bit-true comparison。
 
-第一层验证是 Python model。它先用 K=3 小规模 trellis 做 smoke test，因为 K=3 只有 4 个状态，出错时更容易定位；然后再切到 K=7 正式配置。Python 单元测试一共 6 个，覆盖无噪声、soft3 无噪声、tail termination、单 bit 错误纠正，以及有限位宽加 subtract-min normalization。结果是 6 个全部通过。
-
-第二层验证是测试向量。向量生成阶段把 no_noise、all_zero、impulse_one、single_bit_error、burst_error_short、random_hard、soft_awgn_0db、soft_awgn_1db、soft_awgn_2db 都固定成文件。每个 case 都有 metadata、输入、接收符号和 golden output。这样 RTL 和 board 不需要重新随机生成输入，避免“软件测的是一题，硬件跑的是另一题”。
-
-第三层验证是 hard-decision RTL。hard baseline 先跑 no_noise、all_zero、impulse_one，再跑 single_bit_error。这个阶段主要确认 trellis 状态编号、branch metric、ACS 和 traceback 没有基础错误。结果文件是 `data/regression/rtl_regression_summary.csv`，4 个 case 全部 0 mismatch。
-
-第四层验证是 soft-decision RTL。soft3 hero 继续跑 soft_awgn_0db、soft_awgn_1db、soft_awgn_2db。这个阶段重点检查 soft symbol packing、soft branch metric、有限 path metric width 和 subtract-min normalization。结果文件是 `data/regression/soft3_regression_summary.csv`，3 个 case 全部 0 mismatch。
-
-第五层验证是参数扫描。扫描阶段不改变测试向量，只改变 traceback depth、path metric width 和 normalization。它回答的是“最终参数为什么这样选”。扫描结果已经在设计规格部分用图 3 和图 4 展示。
-
-第六层验证是 Vivado。Vivado 阶段不再检查 decoded bits，而是检查 RTL 能否综合、布局布线，以及资源、时序、功耗估计如何。它暴露出当前 soft-decision hero 在 100 MHz 下时序失败。
-
-第七层验证是真实 ZU4EV board。板级验证最重要，因为它检查的不只是 core，还包括 PS、DMA、OCM buffer、AXI Stream packing、TLAST、cache flush/invalidate 和 UART log。最新通过的 UART 运行显示 3 个 case 全部 PASS。
+* Python model：先用 K=3 小规模 trellis 做 smoke test，因为 K=3 只有 4 个状态，出错时更容易定位；然后再切到 K=7 正式配置。Python 单元测试一共 6 个，覆盖无噪声、soft3 无噪声、tail termination、单 bit 错误纠正，以及有限位宽加 subtract-min normalization。结果是 6 个全部通过。
+* 测试向量：把 no_noise、all_zero、impulse_one、single_bit_error、burst_error_short、random_hard、soft_awgn_0db、soft_awgn_1db、soft_awgn_2db 都固定成文件。每个 case 都有 metadata、输入、接收符号和 golden output。这样 RTL 和 board 不需要重新随机生成输入，避免“软件测的是一题，硬件跑的是另一题”。
+* hard-decision RTL：hard baseline 先跑 no_noise、all_zero、impulse_one，再跑 single_bit_error。这个阶段主要确认 trellis 状态编号、branch metric、ACS 和 traceback 没有基础错误。结果文件是 `data/regression/rtl_regression_summary.csv`，4 个 case 全部 0 mismatch。
+* soft-decision RTL：soft3 hero 继续跑 soft_awgn_0db、soft_awgn_1db、soft_awgn_2db。这个阶段重点检查 soft symbol packing、soft branch metric、有限 path metric width 和 subtract-min normalization。结果文件是 `data/regression/soft3_regression_summary.csv`，3 个 case 全部 0 mismatch。
+* 参数扫描：不改变测试向量，只改变 traceback depth、path metric width 和 normalization。它回答的是“最终参数为什么这样选”。扫描结果已经在设计规格部分用图 3 和图 4 展示。
+* Vivado：不再检查 decoded bits，而是检查 RTL 能否综合、布局布线，以及资源、时序、功耗估计如何。它暴露出当前 soft-decision hero 在 100 MHz 下时序失败。
+* 真实 ZU4EV board：检查的不只是 core，还包括 PS、DMA、OCM buffer、AXI Stream packing、TLAST、cache flush/invalidate 和 UART log。最新通过的 UART 运行显示 3 个 case 全部 PASS。
 
 验证结果可以概括为：
 
@@ -427,11 +446,9 @@ RTL 架构可以分成两层。第一层是 decoder kernel，也就是只负责 
 
 仿真结果分三层看。
 
-第一层是 no_noise。无噪声 case 的意义是检查基本功能。如果 no_noise 都失败，说明 trellis、state numbering、tail termination 或 traceback 存在基础错误，不能继续讨论 soft-decision 或 BER。
-
-第二层是人工错误。single_bit_error 和 burst_error_short 这类 case 的意义是检查卷积码冗余是否真的被利用。如果译码器只是逐 bit 硬判，它无法利用整条路径信息；而 Viterbi 会从整条路径累计代价中选择更合理的输入序列。
-
-第三层是 AWGN soft cases。soft_awgn_0db、soft_awgn_1db、soft_awgn_2db 用来检查 soft-decision 输入。0 dB 噪声更强，2 dB 相对更容易。参数扫描阶段发现，短 traceback depth=16 时，soft_awgn_0db 会出现 mismatch；当 depth 增加到 32、40、64 后，当前向量集下 mismatch 变成 0。
+* no_noise：无噪声 case 的意义是检查基本功能。如果 no_noise 都失败，说明 trellis、state numbering、tail termination 或 traceback 存在基础错误，不能继续讨论 soft-decision 或 BER。
+* 人工错误：single_bit_error 和 burst_error_short 这类 case 的意义是检查卷积码冗余是否真的被利用。如果译码器只是逐 bit 硬判，它无法利用整条路径信息；而 Viterbi 会从整条路径累计代价中选择更合理的输入序列。
+* AWGN soft cases：soft_awgn_0db、soft_awgn_1db、soft_awgn_2db 用来检查 soft-decision 输入。0 dB 噪声更强，2 dB 相对更容易。参数扫描阶段发现，短 traceback depth=16 时，soft_awgn_0db 会出现 mismatch；当 depth 增加到 32、40、64 后，当前向量集下 mismatch 变成 0。
 
 有限向量 BER 近似结果如下：
 
@@ -586,20 +603,14 @@ Completed 3 cases, failures=0
 
 当前最明确的结论是：功能闭环已经通过，但高频时序还没有完成。soft-decision hero 在 100 MHz 目标下 WNS 为 -20.433 ns，这说明当前一拍内完成的 64-state soft ACS、normalization 和 metric update 太重。板级验证在 25 MHz 下通过，说明设计逻辑和系统连接是正确的，但还不能说它已经是 100 MHz timing-clean implementation。
 
-未来工作第一项是 pipeline。最直接的方向是在 ACS array 和 subtract-min normalization 之间插入 pipeline stage，把原本一拍完成的加法、比较、最小值搜索和减法拆成多拍。这样会增加 latency，但有机会显著改善 WNS。
-
-未来工作第二项是重新组织 normalization。当前 subtract-min 每一步都做全局最小值搜索，时序压力较大。可以考虑分层 reduction、隔几步归一化一次，或者使用饱和策略做对比。不过这些都需要重新验证 fixed-point 行为，不能只改 RTL 不改 golden model。
-
-未来工作第三项是真正的 BER campaign。当前报告只使用有限 96-bit vectors，不能声称得到完整 BER 曲线。后续可以为多个 SNR 点生成更长随机 payload，每个点累计足够多 bit，再画 BER vs SNR 曲线。这样才能评价 soft-decision 相对 hard-decision 的统计性能提升。
-
-未来工作第四项是 DDR DMA。当前最终通过版本使用 OCM buffer，优点是地址路径简单、容量足够当前 case；缺点是容量有限。后续如果要跑更长帧或批量 BER，需要修通 DDR buffer，并严格处理 cache flush/invalidate 和地址映射。
-
-未来工作第五项是 survivor memory 优化。当前设计更偏向功能闭环和可调试性，后续可以把 survivor storage 更系统地映射到 BRAM 或更紧凑的 RAM 结构，减少 FF 压力，并让 traceback 更适合长帧。
+* Pipeline：最直接的方向是在 ACS array 和 subtract-min normalization 之间插入 pipeline stage，把原本一拍完成的加法、比较、最小值搜索和减法拆成多拍。这样会增加 latency，但有机会显著改善 WNS。
+* Normalization 重组织：当前 subtract-min 每一步都做全局最小值搜索，时序压力较大。可以考虑分层 reduction、隔几步归一化一次，或者使用饱和策略做对比。不过这些都需要重新验证 fixed-point 行为，不能只改 RTL 不改 golden model。
+* 真正的 BER campaign：当前报告只使用有限 96-bit vectors，不能声称得到完整 BER 曲线。后续可以为多个 SNR 点生成更长随机 payload，每个点累计足够多 bit，再画 BER vs SNR 曲线。这样才能评价 soft-decision 相对 hard-decision 的统计性能提升。
+* DDR DMA：当前最终通过版本使用 OCM buffer，优点是地址路径简单、容量足够当前 case；缺点是容量有限。后续如果要跑更长帧或批量 BER，需要修通 DDR buffer，并严格处理 cache flush/invalidate 和地址映射。
+* Survivor memory 优化：当前设计更偏向功能闭环和可调试性，后续可以把 survivor storage 更系统地映射到 BRAM 或更紧凑的 RAM 结构，减少 FF 压力，并让 traceback 更适合长帧。
 
 总的来说，现在的版本足够作为课程 open-ended project 提交，因为它不是只停留在代码层面，而是把算法、RTL、参数扫描、Vivado 和真实开发板验证串起来了。报告中保留 timing failure 和 board debug 过程，是为了说明这个项目是工程闭环，而不是只挑好看的结果展示。
 
 ## 16. AI 工具声明
 
 AI tools were used as engineering assistants for planning, code organization, script generation, debugging guidance, and report drafting. Final architectural decisions, validation criteria, experiment interpretation, and submission responsibility remain with the author.
-
-中文解释：AI 工具用于辅助规划、代码组织、脚本生成、调试建议和报告草拟；最终架构决策、验证标准、实验解释和提交责任由作者承担。

@@ -709,7 +709,8 @@ def make_pdf(markdown_text: str, plot_paths: dict[str, Path]) -> None:
     styles.add(ParagraphStyle(name="CNHeading1", parent=styles["Heading1"], fontName="STSong-Light", fontSize=14, leading=18, spaceBefore=12, spaceAfter=8))
     styles.add(ParagraphStyle(name="CNHeading2", parent=styles["Heading2"], fontName="STSong-Light", fontSize=12, leading=16, spaceBefore=10, spaceAfter=6))
     styles.add(ParagraphStyle(name="CNBody", parent=styles["BodyText"], fontName="STSong-Light", fontSize=9.5, leading=14, spaceAfter=6))
-    styles.add(ParagraphStyle(name="CNCode", parent=styles["Code"], fontName="Courier", fontSize=7.2, leading=9, leftIndent=10, spaceAfter=6))
+    styles.add(ParagraphStyle(name="CNBullet", parent=styles["CNBody"], leftIndent=18, firstLineIndent=0, bulletIndent=6, bulletFontName="STSong-Light", bulletFontSize=9.5))
+    styles.add(ParagraphStyle(name="CNCode", parent=styles["Code"], fontName="STSong-Light", fontSize=7.2, leading=9, leftIndent=10, spaceAfter=6))
 
     doc = SimpleDocTemplate(
         str(ROOT / "Report.pdf"),
@@ -764,8 +765,8 @@ def make_pdf(markdown_text: str, plot_paths: dict[str, Path]) -> None:
         line = raw.rstrip()
         if line.startswith("```"):
             if in_code:
-                text = "<br/>".join(code_lines[:35])
-                story.append(Paragraph(text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"), styles["CNCode"]))
+                escaped_lines = [code_line.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") for code_line in code_lines[:35]]
+                story.append(Paragraph("<br/>".join(escaped_lines), styles["CNCode"]))
                 code_lines = []
                 in_code = False
             else:
@@ -799,7 +800,14 @@ def make_pdf(markdown_text: str, plot_paths: dict[str, Path]) -> None:
             if match:
                 image_path = ROOT / match.group(1)
                 if image_path.exists():
-                    story.append(Image(str(image_path), width=5.6 * inch, height=3.25 * inch, kind="proportional"))
+                    if image_path.name in {
+                        "fig05_end_to_end_workflow.png",
+                        "fig07_rtl_core_flow.png",
+                        "fig11_board_dataflow.png",
+                    }:
+                        story.append(Image(str(image_path), width=6.8 * inch, height=8.6 * inch, kind="proportional"))
+                    else:
+                        story.append(Image(str(image_path), width=5.6 * inch, height=3.25 * inch, kind="proportional"))
             idx += 1
             continue
         if line.startswith("| "):
@@ -811,6 +819,11 @@ def make_pdf(markdown_text: str, plot_paths: dict[str, Path]) -> None:
             if table is not None:
                 story.append(table)
                 story.append(Spacer(1, 8))
+            continue
+        if line.startswith("* "):
+            safe = line[2:].strip().replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            story.append(Paragraph(safe, styles["CNBullet"], bulletText="*"))
+            idx += 1
             continue
         safe = line.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
         story.append(Paragraph(safe, styles["CNBody"]))
