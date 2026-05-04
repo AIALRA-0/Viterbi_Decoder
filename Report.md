@@ -199,7 +199,7 @@ Viterbi Decoder 的做法是把所有可能的状态路径展开成 trellis（�
 
 $$2^{K-1}=2^6=64$$
 
-![图 1 状态数随 K 增长](docs/assets/plots/fig04_state_explosion.png)
+![图 1：状态数随 K 增长](docs/assets/plots/fig04_state_explosion.png)
 
 图 1：状态数随 K 指数增长。这张图说明 constraint length 增大时，trellis 状态数会按指数增长。K=7 对应 64 个状态，这意味着后续 BMU、ACS、survivor memory 和 traceback 都要围绕 64-state trellis 展开，硬件规模、资源占用和时序压力都明显高于 4-state 小例
 
@@ -207,7 +207,7 @@ $$2^{K-1}=2^6=64$$
 
 本项目同时保留 hard-decision baseline 和 soft-decision hero design。baseline 是 hard-decision 版本，输入只包含 0 或 1，主要用于验证 trellis 构造、state numbering 和基本 ACS 流程是否正确。hero design 是最终重点验证的 3-bit soft-decision 版本，输入用 0 到 7 表示接收符号的置信度，可以比 hard-decision 保留更多信道信息。
 
-![图 2 硬判决和软判决分支成本](docs/assets/plots/fig05_hard_vs_soft_metric.png)
+![图 2：硬判决和软判决分支成本](docs/assets/plots/fig05_hard_vs_soft_metric.png)
 
 图 2：硬判决和软判决分支成本形状。Hard-decision 会先把接收信号直接判成 0 或 1，因此分支成本只反映“是否相同”这种粗粒度判断；例如收到 1 时，只知道它被判成了 1，却不知道这个 1 是非常可靠，还是接近判决边界。Soft-decision 则保留接收值与理想 0 或理想 1 之间的距离，本项目用 3-bit soft symbol 表示 0 到 7 的置信度刻度，因此译码器在比较候选路径时可以利用更细的可靠性信息。这样一来，即使两个候选路径在 hard-decision 下看起来差不多，soft-decision 也可能根据接收值的距离差异选出更合理的路径。
 
@@ -220,14 +220,14 @@ hero design 的核心参数， traceback depth 设为 40，path metric width 设
 项目分别尝试了不同 traceback depth、不同 path metric width 和不同 normalization 方案，并用同一批测试向量统计 mismatch 数量。结果显示，在当前测试向量下，traceback depth 为 40、path metric width 为 12 bit、使用 subtract-min normalization 时可以实现 0 mismatch，同时不会像更大 depth 或更大位宽那样继续增加不必要的存储、延迟和资源压力。因此，这组配置被选为最终的 hero design。
 
 
-![图 3 回溯深度扫描](docs/assets/plots/fig03_traceback_depth_sweep.png)
+![图 3：回溯深度扫描](docs/assets/plots/fig03_traceback_depth_sweep.png)
 
-图 3 展示了 traceback depth 对 mismatch 数量的影响。depth=16 时，当前向量集中出现 8 个 mismatch，说明回溯深度太短时，路径还没有充分收敛，译码器可能过早做出判断。depth=32、40、64 时，当前测试向量下 mismatch 都为 0。因此，depth=40 的意义是：它已经达到当前测试条件下的 0 mismatch，同时相比 depth=64 可以减少一部分 survivor memory 需求和 traceback 等待时间。
+图 3：回溯深度扫描。该图展示了 traceback depth 对 mismatch 数量的影响。depth=16 时，当前向量集中出现 8 个 mismatch，说明回溯深度太短时，路径还没有充分收敛，译码器可能过早做出判断。depth=32、40、64 时，当前测试向量下 mismatch 都为 0。因此，depth=40 的意义是：它已经达到当前测试条件下的 0 mismatch，同时相比 depth=64 可以减少一部分 survivor memory 需求和 traceback 等待时间。
 
 
-![图 4 路径度量位宽扫描](docs/assets/plots/fig04_path_metric_width_sweep.png)
+![图 4：路径度量位宽扫描](docs/assets/plots/fig04_path_metric_width_sweep.png)
 
-图 4 展示了 path metric width 对硬件代价的影响。在 depth=40 和 subtract-min normalization 条件下，当前测试集里 8/10/12/16 bit 都没有观察到 mismatch，所以图中直接在每根柱子底部标出 mismatch=0；柱高表示 64 个状态需要保存的 path metric register 总位数。位宽越大，寄存器位数从 512 增加到 1024，加法器和比较器也会变宽，资源占用和时序压力都会上升。因此，选择 12 bit 不是因为 16 bit 不正确，而是因为 12 bit 已经足够通过当前功能闭环，同时比 16 bit 更克制。
+图 4：路径度量位宽扫描。该图展示了 path metric width 对硬件代价的影响。在 depth=40 和 subtract-min normalization 条件下，当前测试集里 8/10/12/16 bit 都没有观察到 mismatch，所以图中直接在每根柱子底部标出 mismatch=0；柱高表示 64 个状态需要保存的 path metric register 总位数。位宽越大，寄存器位数从 512 增加到 1024，加法器和比较器也会变宽，资源占用和时序压力都会上升。因此，选择 12 bit 不是因为 16 bit 不正确，而是因为 12 bit 已经足够通过当前功能闭环，同时比 16 bit 更克制。
 
 
 表 2：设计规格与参数选择。
@@ -284,7 +284,7 @@ src/
 
 ## 5. 端到端工程流程
 
-![图 5 端到端工程闭环](docs/assets/plots/fig05_end_to_end_workflow.png)
+![图 5：端到端工程闭环](docs/assets/plots/fig05_end_to_end_workflow.png)
 
 图 5：端到端工程闭环。这张图强调的是每一步产生什么、下一步为什么需要它。设计规格先固定参数，Python model 先建立标准答案，测试向量把输入输出固定下来，RTL 仿真证明硬件逻辑和软件答案一致，参数扫描解释为什么选择当前 hero 参数，Vivado 告诉我们资源和时序压力，板级验证最后证明数据真的能经过 PS、DMA、PL 和 UART 跑通。
 
@@ -378,9 +378,9 @@ Path C = 25
 
 具体到硬件流程中，subtract-min normalization 通常发生在每个 trellis step 的 ACS 更新之后。译码器先为所有状态计算新的 path metric，然后找出这些 path metric 中的最小值，再让所有状态的 path metric 同时减去这个最小值，公式是 $PM'_s=PM_s-\min_i(PM_i)$。这样做的结果是，每一步之后至少有一个状态的 path metric 被归一化为 0，其他状态保存的是相对这个最优状态多出来的代价。由于所有状态减去的是同一个数，所以不会影响后续 ACS 比较谁更小，只是把数值范围控制得更适合硬件实现。
 
-![图 6 减最小值归一化](docs/assets/plots/fig09_normalization_effect.png)
+![图 6：减最小值归一化](docs/assets/plots/fig09_normalization_effect.png)
 
-图 6 展示了 subtract-min normalization 的作用。图中每条路径的绝对 path metric 数值都被整体压低，但路径之间的相对大小没有改变。也就是说，归一化前哪条路径最优，归一化后仍然是哪条路径最优。它解决的是固定宽度硬件中的数值范围和溢出风险问题，而不是改变 Viterbi Decoder 的路径选择逻辑
+图 6：减最小值归一化。该图展示了 subtract-min normalization 的作用。图中每条路径的绝对 path metric 数值都被整体压低，但路径之间的相对大小没有改变。也就是说，归一化前哪条路径最优，归一化后仍然是哪条路径最优。它解决的是固定宽度硬件中的数值范围和溢出风险问题，而不是改变 Viterbi Decoder 的路径选择逻辑
 
 ## 7. RTL 架构
 
@@ -388,9 +388,9 @@ RTL 架构可以分成两个层次：
 * decoder kernel：Viterbi 译码核心，只负责译码算法本身，回答译码结果怎么算出来,更关注算法硬件化，例如 branch metric 怎么算、64 个状态怎么更新、survivor decision 怎么保存、traceback 怎么恢复 bit
 * board shell：为了真实上板运行而加在核心外面的接口和控制逻辑，包括 AXI Stream、AXI-Lite、DMA、PS/PL 连接和调试寄存器，回答数据怎么送进硬件、结果怎么从板子取回来，例如 ARM 端程序如何把输入数据送到 PL，DMA 如何搬运数据，控制寄存器如何启动译码器，UART 如何打印最终验证结果
 
-![图 7 RTL 译码核心结构](docs/assets/plots/fig07_rtl_core_flow.png)
+![图 7：RTL 译码核心结构](docs/assets/plots/fig07_rtl_core_flow.png)
 
-图 7 展示了 RTL 译码核心内部的数据流。接收符号先进入 BMU，BMU 计算每条 trellis 分支和接收数据之间的差距；随后 ACS array 使用这些 branch metric 更新每个状态的最优 path metric，并选择每个状态当前最合理的前驱路径；survivor RAM 记录这些选择结果；最后 traceback engine 根据 survivor RAM 中保存的记录反向追踪路径，并输出 decoded bits。换句话说，这张图对应的是 Viterbi Decoder 从“接收符号”到“恢复原始 bit”的硬件流水
+图 7：RTL 译码核心结构。该图展示了 RTL 译码核心内部的数据流。接收符号先进入 BMU，BMU 计算每条 trellis 分支和接收数据之间的差距；随后 ACS array 使用这些 branch metric 更新每个状态的最优 path metric，并选择每个状态当前最合理的前驱路径；survivor RAM 记录这些选择结果；最后 traceback engine 根据 survivor RAM 中保存的记录反向追踪路径，并输出 decoded bits。换句话说，这张图对应的是 Viterbi Decoder 从“接收符号”到“恢复原始 bit”的硬件流水
 
 其中的核心模块
 
@@ -488,9 +488,9 @@ Vivado 结果需要分层解读 [4]。综合通过只说明 RTL 能被工具转�
 
 该表的数据来源为 data/impl/vivado_summary.csv。LUT 和 FF 反映逻辑和寄存器资源占用，BRAM 和 DSP 反映是否使用片上块 RAM 和专用运算硬核，WNS 和 TNS 反映时序是否满足目标约束，估算功耗来自 Vivado 的功耗报告。hard-decision core 的 WNS 为正，说明它在 10 ns 时钟约束下还有时序裕量；soft-decision core 的 WNS 为负，说明它虽然能够完成综合和布局布线，但不能在 100 MHz 目标频率下稳定工作。
 
-![图 8 Vivado 资源时序功耗结果](docs/assets/plots/fig09_vivado_resource_timing.png)
+![图 8：Vivado 资源时序功耗结果](docs/assets/plots/fig09_vivado_resource_timing.png)
 
-图 8 展示了 Vivado 资源、时序和功耗对比。左图比较 LUT 和 FF，可以看到 soft-decision core 相比 hard-decision core 确实增加了资源，但增加幅度仍然在可解释范围内；中图比较 WNS，可以看到 soft-decision core 的时序明显恶化；右图比较 Vivado 估算功耗，可以看到 soft-decision core 的功耗估计也有所上升。把资源、时序和功耗分开看后可以发现，本项目当前最主要的问题不是 FPGA 资源完全不够，而是 soft-decision 版本的关键路径太长，导致 100 MHz timing closure 失败。
+图 8：Vivado 资源时序功耗结果。该图展示了 Vivado 资源、时序和功耗对比。左图比较 LUT 和 FF，可以看到 soft-decision core 相比 hard-decision core 确实增加了资源，但增加幅度仍然在可解释范围内；中图比较 WNS，可以看到 soft-decision core 的时序明显恶化；右图比较 Vivado 估算功耗，可以看到 soft-decision core 的功耗估计也有所上升。把资源、时序和功耗分开看后可以发现，本项目当前最主要的问题不是 FPGA 资源完全不够，而是 soft-decision 版本的关键路径太长，导致 100 MHz timing closure 失败。
 
 hard-decision core 的结果说明基础 Viterbi 架构可以被工具比较顺利地处理。它的 LUT 为 8116，FF 为 15243，WNS 为 6.956 ns。100 MHz 对应 10 ns 时钟周期，WNS 为正表示最慢路径仍然比时钟要求快，说明 hard-decision 版本在该约束下具有较大时序裕量。这个结果也说明 trellis 更新、path metric 存储和 traceback 等基础结构本身并不是无法实现，真正的压力主要来自 soft-decision 版本中更复杂的度量计算和归一化逻辑。
 
@@ -524,7 +524,7 @@ Vivado timing report 中的 WNS 用来描述最差路径距离满足时钟约束
 
 最后一列的 100 MHz 同周期估算只是把同样的 cycles 放到 100 MHz 时钟下重新换算，用来观察如果板级流程周期数不变、时钟提高到 100 MHz 时的吞吐量级；它不是实际 100 MHz 板级通过结果，因为当前 soft-decision design 在 100 MHz 下没有完成 timing closure
 
-![图 9 板级周期和吞吐率](docs/assets/plots/fig10_board_cycles_throughput.png)
+![图 9：板级周期和吞吐率](docs/assets/plots/fig10_board_cycles_throughput.png)
 
 图 9：板级 cycles 和整帧吞吐率。左图显示每个 96-bit frame 的完成周期，右图把它换算成 25 MHz board shell 下的吞吐率。no_noise 少一些 cycles，两个带错误或带噪声 case 都是 855 cycles。
 
@@ -554,21 +554,21 @@ Vivado timing report 中的 WNS 用来描述最差路径距离满足时钟约束
 
 PS 和 PL 之间通过 AXI DMA 搬运输入和输出数据，UART 用来把测试结果打印回电脑，JTAG 用来下载 bitstream 和 ELF。
 
-![图 10 ZU4EV 开发板实物](docs/assets/board/zu4ev_board_photo.jpg)
+![图 10：ZU4EV 开发板实物](docs/assets/board/zu4ev_board_photo.jpg)
 
 图 10：ZU4EV 开发板实物。这张图用于说明本项目不是只停留在仿真，而是接入了实际开发板。板级验证时，电脑通过 JTAG 下载硬件配置和裸机程序，通过 COM9 串口捕获 UART log。
 
 板级数据流从上到下如下：
 
-![图 11 板级数据流](docs/assets/plots/fig11_board_dataflow.png)
+![图 11：板级数据流](docs/assets/plots/fig11_board_dataflow.png)
 
-图 11 展示了一次 board validation 的完整数据路径。首先，电脑端脚本启动测试流程，并通过 JTAG 完成 bitstream 和 ELF 下载。随后，运行在 ARM 上的 bare-metal 程序把测试输入写入 OCM buffer，并配置 AXI DMA。DMA 的 MM2S 通道把输入 soft symbols 从内存送入 PL 侧的 Viterbi core；core 完成译码后，通过 AXI Stream 输出 decoded bits；DMA 的 S2MM 通道再把 decoded bits 写回 OCM。最后，ARM 程序读取输出 buffer，与 golden output 逐 bit 比较，并通过 UART 打印每个 case 的 PASS/FAIL、mismatch count 和 cycle count。也就是说，板级验证检查的是完整数据链路，而不只是 decoder core 的局部功能。
+图 11：板级数据流。该图展示了一次 board validation 的完整数据路径。首先，电脑端脚本启动测试流程，并通过 JTAG 完成 bitstream 和 ELF 下载。随后，运行在 ARM 上的 bare-metal 程序把测试输入写入 OCM buffer，并配置 AXI DMA。DMA 的 MM2S 通道把输入 soft symbols 从内存送入 PL 侧的 Viterbi core；core 完成译码后，通过 AXI Stream 输出 decoded bits；DMA 的 S2MM 通道再把 decoded bits 写回 OCM。最后，ARM 程序读取输出 buffer，与 golden output 逐 bit 比较，并通过 UART 打印每个 case 的 PASS/FAIL、mismatch count 和 cycle count。也就是说，板级验证检查的是完整数据链路，而不只是 decoder core 的局部功能。
 
 这里有一个重要调试点：buffer 放在哪里。第一次尝试使用 DDR buffer 时，decoder core 没有看到有效的 stream input，说明数据虽然在软件侧准备好了，但没有真正通过 DMA 送到 PL。后续改用 OCM buffer 后，core 能看到输入，说明数据通路已经部分打通，但中间又出现 DMA decode error。继续对比 Vivado address map 后，问题定位到 OCM segment 没有被包含在 DMA 的 MM2S/S2MM 可访问地址空间中。换句话说，DMA 访问的地址范围和实际 buffer 所在地址段不匹配。补上 OCM segment 的地址映射后，DMA 能够正确访问 OCM buffer，最终 board run 通过。
 
 CMD log 截图如下。
 
-![图 12 最终 UART log 截图](docs/assets/board/uart_success_log.png)
+![图 12：最终 UART log 截图](docs/assets/board/uart_success_log.png)
 
 图 12：最终 UART log 截图。图中只保留相对路径和 UART 输出摘录，不包含本机绝对路径。
 
@@ -588,11 +588,11 @@ CMD log 截图如下。
 | single_bit_error | 204 | 96 | 96 | 855 | 0 | PASS |
 | soft_awgn_2db | 204 | 96 | 96 | 855 | 0 | PASS |
 
-![图 13 板级尝试过程](docs/assets/plots/fig12_board_attempts.png)
+![图 13：板级尝试过程](docs/assets/plots/fig12_board_attempts.png)
 
-图 13：board validation attempts。这张图不是只看最终成功，而是把前几次失败也放出来。左边显示每次尝试是 pass 还是 fail；右边显示 stream 看到多少输入样本、吐出多少输出样本。第一次 timeout 表示串口没有等到完成标志，说明系统没有完整跑完。第二次 functional failure 中，core 已经看到 109 个 samples，但 emitted 仍然是 0，这说明问题不是 app 完全没启动，而是 DMA/地址映射或 stream 传输中途出错。最后一次 pass 中，seen=204、emitted=96，说明输入完整进入 PL，输出也完整回到 PS。
+图 13：板级尝试过程。该图不是只看最终成功，而是把前几次失败也放出来。左边显示每次尝试是 pass 还是 fail；右边显示 stream 看到多少输入样本、吐出多少输出样本。第一次 timeout 表示串口没有等到完成标志，说明系统没有完整跑完。第二次 functional failure 中，core 已经看到 109 个 samples，但 emitted 仍然是 0，这说明问题不是 app 完全没启动，而是 DMA/地址映射或 stream 传输中途出错。最后一次 pass 中，seen=204、emitted=96，说明输入完整进入 PL，输出也完整回到 PS。
 
-![图 14 最终 UART case 结果](docs/assets/plots/fig13_board_case_pass.png)
+![图 14：最终 UART case 结果](docs/assets/plots/fig13_board_case_pass.png)
 
 图 14：最终 UART case 结果。三个 case 全部 mismatch=0。cycles 数值也对应 UART log 中打印出的结果。
 
