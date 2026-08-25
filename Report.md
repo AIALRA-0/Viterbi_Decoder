@@ -1,6 +1,6 @@
 # Soft-Decision Viterbi Decoder Design and Verification
 
-### Lucas Ding
+### Project Author
 
 ## Abstract
 

@@ -39,7 +39,7 @@ Filled `config/local.env` with the resolved local project root, FIR reference re
 
 `git init`
 
-`git remote add origin git@github.com:AIALRA-0/Viterbi_Decoder.git`
+`git remote add origin git@github.com:<your-github-owner>/Viterbi_Decoder.git`
 
 `git status --short --ignored`
 

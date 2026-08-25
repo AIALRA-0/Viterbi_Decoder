@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="500" viewBox="0 0 1280 500" role="img" aria-labelledby="title desc">
+  <title id="title">Resource-Aware Soft-Decision Viterbi Decoder</title>
+  <desc id="desc">A stylized trellis converges through an FPGA decoder toward a verified output path</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#071426"/><stop offset="0.5" stop-color="#102a43"/><stop offset="1" stop-color="#123c3c"/></linearGradient>
+    <linearGradient id="path" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#58a6ff"/><stop offset="1" stop-color="#5ee6a8"/></linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1280" height="500" rx="28" fill="url(#bg)"/>
+  <circle cx="1080" cy="30" r="240" fill="#1d7f75" opacity="0.12"/><circle cx="120" cy="480" r="260" fill="#245ea8" opacity="0.13"/>
+  <g stroke="#56718c" stroke-width="2" opacity="0.72">
+    <path d="M95 105 260 175 425 105 590 175"/><path d="M95 175 260 105 425 175 590 105"/>
+    <path d="M95 245 260 315 425 245 590 315"/><path d="M95 315 260 245 425 315 590 245"/>
+    <path d="M95 105 260 105 425 105 590 105"/><path d="M95 175 260 175 425 175 590 175"/>
+    <path d="M95 245 260 245 425 245 590 245"/><path d="M95 315 260 315 425 315 590 315"/>
+  </g>
+  <path d="M95 175 260 105 425 175 590 105 680 210" fill="none" stroke="url(#path)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+  <g fill="#0a1728" stroke="#70d7ff" stroke-width="4">
+    <circle cx="95" cy="105" r="12"/><circle cx="95" cy="175" r="12"/><circle cx="95" cy="245" r="12"/><circle cx="95" cy="315" r="12"/>
+    <circle cx="260" cy="105" r="12"/><circle cx="260" cy="175" r="12"/><circle cx="260" cy="245" r="12"/><circle cx="260" cy="315" r="12"/>
+    <circle cx="425" cy="105" r="12"/><circle cx="425" cy="175" r="12"/><circle cx="425" cy="245" r="12"/><circle cx="425" cy="315" r="12"/>
+    <circle cx="590" cy="105" r="12"/><circle cx="590" cy="175" r="12"/><circle cx="590" cy="245" r="12"/><circle cx="590" cy="315" r="12"/>
+  </g>
+  <g transform="translate(680 84)">
+    <rect width="250" height="250" rx="28" fill="#09192a" stroke="#5ee6a8" stroke-width="5"/>
+    <rect x="52" y="52" width="146" height="146" rx="16" fill="#15334d" stroke="#70d7ff" stroke-width="3"/>
+    <g stroke="#5ee6a8" stroke-width="5"><path d="M25 45H0M25 85H0M25 125H0M25 165H0M25 205H0M250 45h25M250 85h25M250 125h25M250 165h25M250 205h25"/></g>
+    <text x="125" y="115" text-anchor="middle" fill="#e8f8ff" font-family="Segoe UI,Arial,sans-serif" font-size="32" font-weight="700">64-state</text>
+    <text x="125" y="155" text-anchor="middle" fill="#9ceac5" font-family="Segoe UI,Arial,sans-serif" font-size="28">soft3 FPGA</text>
+  </g>
+  <path d="M955 210h190" stroke="url(#path)" stroke-width="8" stroke-linecap="round" filter="url(#glow)"/>
+  <path d="m1118 185 35 25-35 25" fill="none" stroke="#5ee6a8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(1050 275)">
+    <rect width="150" height="58" rx="29" fill="#12372f" stroke="#5ee6a8" stroke-width="3"/>
+    <text x="75" y="38" text-anchor="middle" fill="#baffd8" font-family="Segoe UI,Arial,sans-serif" font-size="25" font-weight="700">BOARD PASS</text>
+  </g>
+  <text x="640" y="420" text-anchor="middle" fill="#f4fbff" font-family="Segoe UI,Arial,sans-serif" font-size="42" font-weight="700">Soft-decision Viterbi decoder · ZU4EV · Reproducible evidence</text>
+  <text x="640" y="462" text-anchor="middle" fill="#a9c5d9" font-family="Segoe UI,Arial,sans-serif" font-size="24">Python golden model → RTL → Vivado → JTAG / UART validation</text>
+</svg>

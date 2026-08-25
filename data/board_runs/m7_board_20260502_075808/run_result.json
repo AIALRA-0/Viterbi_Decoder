@@ -14,6 +14,6 @@
   "failure_class": "serial_timeout",
   "failure_detail": "Did not observe completion sentinel on UART",
   "build_info": "%VITERBI_STAGE%\\viterbi_zu4ev\\hero_soft3\\artifacts\\build_info.json",
-  "uart_log": "C:\\Users\\LOCALHOST\\Desktop\\Vertebi\\viterbi_startup_pack\\src\\data\\board_runs\\m7_board_20260502_075808\\uart.log",
-  "program_log": "C:\\Users\\LOCALHOST\\Desktop\\Vertebi\\viterbi_startup_pack\\src\\data\\board_runs\\m7_board_20260502_075808\\program_driver.log"
+  "uart_log": "data/board_runs/m7_board_20260502_075808/uart.log",
+  "program_log": "data/board_runs/m7_board_20260502_075808/program_driver.log"
 }
